@@ -1,0 +1,19 @@
+<mat-card class="form-card">
+  <mat-card-content>
+
+    <mat-card-title align="center">Login</mat-card-title>
+    <form [formGroup]="loginForm" id="login-form" (submit)="login()">
+      <mat-form-field class="full-width">
+        <mat-label>E-Mail</mat-label>
+        <input matInput #email maxlength="45" placeholder="Name des Instituts" formControlName="email" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Passwort</mat-label>
+        <input matInput #password minLength="6" maxlength="32" placeholder="Passwort" formControlName="password" type="password" autocomplete="on" required>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" class="half-width">Login</button>
+      <button mat-button color="primary" type="button" class="half-width" (click)="register()">Register</button>
+    </form>
+
+  </mat-card-content>
+</mat-card>

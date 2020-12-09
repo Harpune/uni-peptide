@@ -1,0 +1,5 @@
+<mat-list *ngIf="user">
+  <mat-list-item>Name: {{user.name }} </mat-list-item>
+  <mat-list-item>Email: {{user.email}} </mat-list-item>
+  <mat-list-item>Registriert seit: {{user.registration * 1000 | date:'d MMMM, YYYY' }} </mat-list-item>
+</mat-list>
