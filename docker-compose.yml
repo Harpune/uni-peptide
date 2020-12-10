@@ -60,9 +60,8 @@ services:
             - _APP_INFLUXDB_PORT=8086
             - _APP_STATSD_HOST=telegraf
             - _APP_STATSD_PORT=8125
-            - _APP_SMTP_HOST=smtp
+            - _APP_SMTP_HOST=localhost
             - _APP_SMTP_PORT=25
-
     mariadb:
         image: appwrite/mariadb:1.0.3
         restart: unless-stopped
@@ -78,7 +77,7 @@ services:
         command: 'mysqld --innodb-flush-method=fsync'
 
     smtp:
-        image: appwrite/smtp:1.0.1
+        image: appwrite/smtp:1.2.0
         restart: unless-stopped
         networks:
             - appwrite

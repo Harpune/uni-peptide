@@ -8,7 +8,7 @@
 
 form {
   margin: auto;
-  width: 200px;
+  width: 100%;
 }
 
 .center {
@@ -22,4 +22,9 @@ form {
   max-width: 250px;
   margin: 0 auto;
   margin-top: 64px;
+}
+
+
+a {
+  cursor: pointer;
 }

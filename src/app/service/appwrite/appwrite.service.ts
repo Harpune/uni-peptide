@@ -63,6 +63,21 @@ export class AppwriteService {
     return this.appwrite.account.deleteSession(id)
   }
 
+  async verifyAccount(): Promise<any> {
+    return new Promise<Account>(async (resolve, reject) => {
+      try {
+        console.log('Start verififcation')
+        let res = await this.appwrite.account.createVerification('http://localhost:4200/home')
+        console.log('End verififcation', res)
+        resolve()
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+
   async createSession(email: string, password: string): Promise<object> {
     return new Promise<object>(async (resolve, reject) => {
       try {
@@ -282,7 +297,7 @@ export class AppwriteService {
       console.log('Could not handle error!')
       return;
     }
-    
+
     console.log(error)
     switch (error.message) {
       case 'Unauthorized':

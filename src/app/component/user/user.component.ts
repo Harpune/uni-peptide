@@ -58,6 +58,10 @@ export class UserComponent implements OnInit {
     this.snackbar.open('Noch nicht implementiert', 'Ok', { duration: 2000 })
   }
 
+  verify(){
+    this.appwriteService.verifyAccount()
+  }
+
   ngOnInit(): void {
     this.breakpoint = (window.innerWidth <= environment.mobileSize) ? 1 : 2;
 
