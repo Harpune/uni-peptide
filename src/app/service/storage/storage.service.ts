@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/models/user';
+import { Account } from 'src/app/models/account';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +10,12 @@ export class StorageService {
 
   constructor() { }
 
-  setCurrentUser(user: User) {
+  setCurrentUser(user: Account) {
     localStorage.setItem(this.userKey, JSON.stringify(user))
   }
 
-  getCurrentUser(): Promise<User> {
-    return new Promise<User>((resolve, reject) => {
+  getCurrentUser(): Promise<Account> {
+    return new Promise<Account>((resolve, reject) => {
       let stringUser = localStorage.getItem(this.userKey)
       if (stringUser != null) {
         resolve(JSON.parse(stringUser))

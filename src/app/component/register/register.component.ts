@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  register() {
+  async register() {
     if (!this.registerForm.valid) {
       return;
     }
@@ -38,7 +38,23 @@ export class RegisterComponent implements OnInit {
 
     console.log("name: " + name)
     if (password == passwordCheck) {
-      this.appwriteService.register(name, email, password)
+      try {
+        let account = await this.appwriteService.createAccount(name, email, password)
+        console.log('createAccount', account)
+        let session = await this.appwriteService.createSession(email, password)
+        console.log('createSession', session)
+        let user = {
+          name: account.name,
+          email: account.email,
+          account: account.$id
+        }
+        await this.appwriteService.createUser(user)
+        console.log('createUser', user)
+        this.router.navigate(['/home'])
+      } catch (e) {
+        console.error(e)
+      }
+
     } else {
       this.snackBar.open('Die Passwörter stimmen nicht überein.', undefined, { duration: 2000 })
     }

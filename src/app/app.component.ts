@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppwriteService } from './service/appwrite/appwrite.service';
-import { User } from './models/user';
-import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment'
+import { Account } from './models/account';
+import { Event, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Session } from './models/session';
 import { StorageService } from './service/storage/storage.service';
 import { HostListener } from '@angular/core';
@@ -13,10 +14,10 @@ import { MatSidenav } from '@angular/material/sidenav';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  private mobileWidth: number = 500
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  title = 'Peptide';
+  title = 'Peptide'
+  isMobile!: boolean
 
   navItems = [
     {
@@ -30,51 +31,62 @@ export class AppComponent implements OnInit {
       icon: 'face'
     },
     {
-      name: 'Institut',
+      name: 'Institute',
       route: '/institute',
       icon: 'folder'
     },
     {
       name: 'Teams',
       route: '/team',
-      icon: 'people'
+      icon: 'bug_report'
     }
   ]
 
-  isMobile: boolean = this.showMobile(window.innerWidth)
+  account!: Account | null
 
   constructor(private appwriteService: AppwriteService,
     private storageService: StorageService,
-    private router: Router) { }
+    private router: Router) {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationEnd) {
+        this.getAccount()
+      }
+    })
+  }
 
   ngOnInit(): void {
-    this.appwriteService.getUser()
-      .then((user: User) => {
+    this.isMobile = window.innerWidth <= environment.mobileSize
+  }
+
+  async getAccount() {
+    // let isLoggedIn = await this.appwriteService.isLoggedIn()
+    this.appwriteService.getAccount()
+      .then((user: Account) => {
         console.log("Logged in as", user)
+        this.account = user
         this.storageService.setCurrentUser(user)
         if (!user.emailVerification) {
           // this.snackBar.open("Dein Account wurde noch nicht verifiziert", "Verifizieren").onAction().subscribe()
         }
       })
-      .catch(error => console.log(error.toString()));
+      .catch(error => {
+        this.account = null
+        console.log(error)
+      });
   }
 
   logout(): void {
     this.appwriteService.getCurrentSession()
-      .then((session: Session) => this.appwriteService.logout(session.$id))
+      .then((session: Session) => this.appwriteService.deleteAccount(session.$id))
       .then((res) => this.storageService.removeCurrentUser())
       .finally(() => this.router.navigate(['/login']))
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.isMobile = this.showMobile(event.target.innerWidth)
-    this.sidenav.toggle(!this.isMobile)
-
-  }
-
-  private showMobile(width: number): boolean {
-    let mobile: boolean = width < this.mobileWidth
-    return mobile
+    this.isMobile = event.target.innerWidth < environment.mobileSize
+    if (this.account != null) {
+      this.sidenav.toggle(!this.isMobile)
+    }
   }
 }

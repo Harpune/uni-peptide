@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import * as Appwrite from "appwrite";
 import { Institute } from 'src/app/models/institute';
 import { Session } from 'src/app/models/session';
-import { User } from 'src/app/models/user';
-import { StorageService } from '../storage/storage.service';
+import { Account } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Team } from 'src/app/models/team';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,7 @@ export class AppwriteService {
   public appwrite: Appwrite = new Appwrite();
 
 
-  constructor(private storageService: StorageService,
-    private snackBar: MatSnackBar) {
+  constructor(private snackBar: MatSnackBar) {
     // init appwrite
     this.appwrite
       .setEndpoint(environment.endpointURL)
@@ -25,7 +24,7 @@ export class AppwriteService {
 
   async isLoggedIn(): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
-      this.getUser()
+      this.getAccount()
         .then(_ => resolve(true))
         .catch(error => {
           this.handleError(error)
@@ -34,10 +33,24 @@ export class AppwriteService {
     })
   }
 
-  async login(email: string, password: string): Promise<User> {
+  async createAccount(name: string, email: string, password: string): Promise<Account> {
     return new Promise(async (resolve, reject) => {
       try {
-        let user: User = await this.appwrite.account.createSession(email, password) as User
+        // create new account -> register
+        let account = await this.appwrite.account.create(email, password, name)
+        resolve(account as Account)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  async getAccount(): Promise<Account> {
+    return new Promise<Account>(async (resolve, reject) => {
+      try {
+        // get current account
+        let user: Account = await this.appwrite.account.get() as Account
         resolve(user)
       } catch (e) {
         this.handleError(e)
@@ -46,15 +59,15 @@ export class AppwriteService {
     })
   }
 
-  async logout(id: string): Promise<object> {
+  async deleteAccount(id: string): Promise<object> {
     return this.appwrite.account.deleteSession(id)
   }
 
-  async register(name: string, email: string, password: string): Promise<User> {
-    return new Promise(async (resolve, reject) => {
+  async createSession(email: string, password: string): Promise<object> {
+    return new Promise<object>(async (resolve, reject) => {
       try {
-        let user: User = await this.appwrite.account.create(email, password, name) as User
-        resolve(user)
+        let session = await this.appwrite.account.createSession(email, password)
+        resolve(session)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -93,10 +106,39 @@ export class AppwriteService {
     })
   }
 
-  async getUser(): Promise<User> {
+  async createUser(data: any): Promise<User> {
     return new Promise<User>(async (resolve, reject) => {
       try {
-        let user: User = await this.appwrite.account.get() as User
+        console.log("data", data)
+        let user: User = await this.appwrite.database.createDocument(environment.userCollectionId, data, ['*'], ['*'], '', '', '') as User
+        resolve(user)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  async listUser(): Promise<User[]> {
+    return new Promise<User[]>(async (resolve, reject) => {
+      try {
+        let res = await this.appwrite.database.listDocuments(environment.userCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
+        console.log('Users', res)
+        let users: User[] = (res as any)['documents'] as User[]
+        resolve(users)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  async getUser(userId: string): Promise<User> {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        console.log("user-id", userId)
+        let user: User = await this.appwrite.database.getDocument(environment.userCollectionId, userId) as User
+        console.log("user", user)
         resolve(user)
       } catch (e) {
         this.handleError(e)
@@ -108,9 +150,19 @@ export class AppwriteService {
   async createInstitute(data: any): Promise<Institute> {
     return new Promise<Institute>(async (resolve, reject) => {
       try {
+        console.log("Create Institut", data)
+
+        // owner
+        let account: Account = await this.getAccount()
+        let current = 'user:' + account.$id
+
+        // team reference
         let team: Team = await this.createTeam(data?.name)
         data.teamId = team.$id
-        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, ['*'], ['*'], '', '', '') as Institute
+
+        // institute
+        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [current], [current], '', '', '') as Institute
+        console.log('Created Institute', institute)
         resolve(institute)
       } catch (e) {
         this.handleError(e)
@@ -122,7 +174,25 @@ export class AppwriteService {
   async listInstitutes(): Promise<Institute[]> {
     return new Promise<Institute[]>(async (resolve, reject) => {
       try {
+        // listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
+
         let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
+        let institutes: Institute[] = (res as any)['documents'] as Institute[]
+        resolve(institutes)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+
+    })
+  }
+
+  async listInstitutesOfUser(teamIds: string[]): Promise<Institute[]> {
+    return new Promise<Institute[]>(async (resolve, reject) => {
+      try {
+        // listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
+
+        let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, teamIds, 0, 50, 'name', '', '', '', 0, 0)
         let institutes: Institute[] = (res as any)['documents'] as Institute[]
         resolve(institutes)
       } catch (e) {
@@ -136,7 +206,11 @@ export class AppwriteService {
   async deleteInstitute(institute: Institute): Promise<object> {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log('Delete institute', institute)
+        // delete team reference
         await this.deleteTeam(institute.teamId)
+
+        // delete institute
         let res = await this.appwrite.database.deleteDocument(environment.instituteCollectionId, institute.$id)
         resolve()
       } catch (e) {
@@ -149,7 +223,13 @@ export class AppwriteService {
   async createTeam(name: string): Promise<Team> {
     return new Promise<Team>(async (resolve, reject) => {
       try {
-        let team: Team = await this.appwrite.teams.create(name, ['*']) as Team
+        // owner
+        let account: Account = await this.getAccount()
+        let current = 'user:' + account.$id
+
+        // create team
+        let team: Team = await this.appwrite.teams.create(name, [current]) as Team
+        console.log('Created Team', team)
         resolve(team)
       } catch (e) {
         this.handleError(e)
@@ -161,8 +241,8 @@ export class AppwriteService {
   async listTeams(): Promise<Team[]> {
     return new Promise<Team[]>(async (resolve, reject) => {
       try {
+        // get all teams
         let res: any = await this.appwrite.teams.list('', 10, 0, 'DESC')
-        console.log(res)
         resolve(res?.teams as Team[])
       } catch (e) {
         this.handleError(e)
@@ -186,17 +266,23 @@ export class AppwriteService {
   async deleteTeam(id: string): Promise<object> {
     return new Promise<Team>(async (resolve, reject) => {
       try {
-        let team: any = await this.appwrite.teams.delete(id)
-        console.log(team)
-        resolve(team)
+        console.log('Delete team-id', id)
+        await this.appwrite.teams.delete(id)
+        resolve()
       } catch (e) {
         this.handleError(e)
-        reject()
+        //TODO: must be reject but runs in 500-Error reject()
+        resolve()
       }
     })
   }
 
   private handleError(error: any): any {
+    if (!error) {
+      console.log('Could not handle error!')
+      return;
+    }
+    
     console.log(error)
     switch (error.message) {
       case 'Unauthorized':
@@ -205,6 +291,7 @@ export class AppwriteService {
 
         break;
       case 'Conflict':
+        this.snackBar.open('Es wurde bereits ein Account mit dieser E-Mail Adresse erstellt', 'Ok', { duration: 2000 })
         break;
       default:
         break;

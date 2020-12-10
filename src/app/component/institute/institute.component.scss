@@ -20,3 +20,10 @@ form {
 .table-icon-column {
   max-width: 10px;
 }
+
+.fab-bottom-right {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+}

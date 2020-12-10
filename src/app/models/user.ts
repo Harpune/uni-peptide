@@ -1,8 +1,10 @@
 export interface User {
     $id: string;
-    email: string;
-    emailVerification: boolean;
     name: string;
-    registration: number;
-    roles: string[];
+    email: string;
+    street: string;
+    streetNumber: string;
+    zip: string;
+    city: string;
+    teams: string[];
 }

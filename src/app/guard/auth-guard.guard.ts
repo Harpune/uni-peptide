@@ -15,10 +15,11 @@ export class AuthGuard implements CanActivate {
     return this.appwriteService.isLoggedIn()
       .then(loggedIn => {
         if (!loggedIn) {
-          console.log("Logged in! Directed to /login")
+          console.log("Logged out! Directed to /login")
           return this.router.createUrlTree(['/login'])
 
         } else {
+          console.log("Logged in")
           return true
         }
       })

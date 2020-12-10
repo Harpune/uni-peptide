@@ -1,5 +1,25 @@
-<mat-list *ngIf="user">
-  <mat-list-item>Name: {{user.name }} </mat-list-item>
-  <mat-list-item>Email: {{user.email}} </mat-list-item>
-  <mat-list-item>Registriert seit: {{user.registration * 1000 | date:'d MMMM, YYYY' }} </mat-list-item>
-</mat-list>
+<mat-card style="margin: 32px;">
+  <mat-card-content>
+    <form *ngIf="userForm" [formGroup]="userForm" id="user-form">
+      <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput #name maxlength="45" placeholder="Name" formControlName="name" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>E-Mail</mat-label>
+        <input matInput #email maxlength="45" placeholder="E-Mail" formControlName="email" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>registration</mat-label>
+        <input matInput #registration type="text" placeholder="registration" formControlName="registration" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>roles</mat-label>
+        <input matInput #roles maxlength="45" placeholder="roles" formControlName="roles" required>
+      </mat-form-field>
+      <button mat-raised-button color="primary" class="half-width"
+        (click)="toggleEdit()">{{ editable ? 'Rückgängig' : 'Bearbeiten' }}</button>
+      <button mat-raised-button type="submit" *ngIf="editable" class="half-width" (click)="save()">Speichern</button>
+    </form>
+  </mat-card-content>
+</mat-card>
