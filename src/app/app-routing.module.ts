@@ -8,6 +8,7 @@ import { HomeComponent } from './component/home/home.component';
 import { AuthGuard } from './guard/auth-guard.guard';
 import { UserComponent } from './component/user/user.component';
 import { TeamComponent } from './component/teams/teams.component';
+import { CreateInstituteComponent } from './component/institute-create/institute-create.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
   { path: 'institute', component: InstituteComponent, canActivate: [AuthGuard] },
+  { path: 'institute/create', component: CreateInstituteComponent, canActivate: [AuthGuard] },
   { path: 'team', component: TeamComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full', canActivate: [AuthGuard] },
   { path: '**', component: PageNotFoundComponent },

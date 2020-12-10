@@ -4,7 +4,7 @@ export interface Team {
     $collection: string;
     $id: string;
     $permissions: Permission;
-    dateCreated: string;
+    dateCreated: number;
     name: string;
-    sum: string;
+    sum: number;
 }

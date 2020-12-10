@@ -20,6 +20,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { InstituteComponent } from './component/institute/institute.component';
 import { HomeComponent } from './component/home/home.component';
@@ -30,6 +33,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from './interceptor/http-error/http-error.interceptor';
 import { UserComponent } from './component/user/user.component';
 import { TeamComponent } from './component/teams/teams.component';
+import { CreateInstituteComponent } from './component/institute-create/institute-create.component';
 
 
 @NgModule({
@@ -41,7 +45,8 @@ import { TeamComponent } from './component/teams/teams.component';
     LoginComponent,
     RegisterComponent,
     UserComponent,
-    TeamComponent
+    TeamComponent,
+    CreateInstituteComponent
   ],
   imports: [
     CommonModule,
@@ -62,7 +67,10 @@ import { TeamComponent } from './component/teams/teams.component';
     MatSnackBarModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatGridListModule,
+    MatTabsModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

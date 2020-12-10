@@ -32,9 +32,9 @@ export class LoginComponent implements OnInit {
     let email = this.loginForm.get('email')?.value;
     let password = this.loginForm.get('password')?.value;
 
-    this.appwriteService.login(email, password)
-      .then(user => {
-        console.log("User", user)
+    this.appwriteService.createSession(email, password)
+      .then((account) => {
+        console.log("Account", account)
         this.router.navigate(['/home'])
       })
       .catch(error => {

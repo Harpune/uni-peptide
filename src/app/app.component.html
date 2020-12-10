@@ -6,20 +6,19 @@
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
       </button>
       <span>Peptide</span>
-      <div>
-        <a *ngFor="let item of navItems" mat-button [routerLink]="item.route"> {{item.name}} </a>
-        <span class="menu-spacer"></span>
-        <a mat-button (click)="logout()" color="warn"> Logout </a>
-      </div>
     </mat-toolbar-row>
   </mat-toolbar>
 
   <mat-sidenav-container style="height: 100%;">
-    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" style="width: 250px;">
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" style="width: 250px;" *ngIf="account">
       <mat-nav-list>
         <mat-list-item *ngFor="let item of navItems" [routerLink]="item.route" (click)="isMobile && sidenav.toggle()">
           <mat-icon mat-list-icon>{{ item.icon }}</mat-icon>
           <div mat-line>{{ item.name }}</div>
+        </mat-list-item>
+        <mat-list-item style="position: absolute; bottom: 0; color: red;" (click)="logout()">
+          <mat-icon mat-list-icon>logout</mat-icon>
+          <div mat-line>Logout</div>
         </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>

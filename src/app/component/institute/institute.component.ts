@@ -1,17 +1,22 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Institute } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
+import { CreateInstituteComponent } from '../institute-create/institute-create.component';
 
 @Component({
   selector: 'app-institute',
   templateUrl: './institute.component.html',
   styleUrls: ['./institute.component.scss']
 })
-export class InstituteComponent implements OnInit, AfterViewInit {
+export class InstituteComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator
+  @ViewChild(MatSort) sort!: MatSort
+
   displayedColumns: string[] = ['teamId', 'name', 'organisation', 'address', 'delete']
   start: number = 0
   end: number = 10
@@ -23,10 +28,8 @@ export class InstituteComponent implements OnInit, AfterViewInit {
   //dataSource!: Institute[];
   dataSource!: MatTableDataSource<Institute>;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
   constructor(private formBuilder: FormBuilder,
+    private dialog: MatDialog,
     private appwriteService: AppwriteService) {
     this.getInstitutes()
   }
@@ -40,35 +43,27 @@ export class InstituteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.paginator.page.subscribe(
-      (asd: any) => {
-        console.log(asd)
-      }, (err: any) => {
-        console.log(err)
-      })
-  }
-
-  submit() {
-    if (!this.instituteForm.valid) {
-      return;
-    }
-
-    // form data
-    let data: object = this.instituteForm.value as Institute
-    console.log(data);
-    this.appwriteService.createInstitute(data)
-      .then((instute: Institute) => this.getInstitutes())
-      .finally(() => this.instituteForm.reset())
-  }
-
   delete(institute: Institute) {
     this.appwriteService.deleteInstitute(institute)
       .finally(() => this.getInstitutes())
   }
 
+  openDialog(): void {
+    const dialogRef = this.dialog.open(CreateInstituteComponent, {
+      data: {
+        name: null,
+        organisation: null,
+        address: null
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(res => {
+      this.appwriteService.createInstitute(res as Institute)
+        .then((_) => this.getInstitutes())
+    })
+  }
+
   private getInstitutes() {
-    this.appwriteService.listTeams()
     this.appwriteService.listInstitutes()
       .then((institutes: Institute[]) => {
         this.dataSource = new MatTableDataSource(institutes)
@@ -77,3 +72,5 @@ export class InstituteComponent implements OnInit, AfterViewInit {
       })
   }
 }
+
+
