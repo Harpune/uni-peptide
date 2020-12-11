@@ -1,28 +1,70 @@
-<mat-card style="margin: 32px;">
+<mat-card *ngIf="account" style="margin: 32px;">
+  <mat-card-header>
+    <ngx-avatar mat-card-avatar [name]="account.name"></ngx-avatar>
+    <mat-card-title>{{ account.name }}</mat-card-title>
+    <mat-card-subtitle>Registriert seit {{account.registration * 1000 | date:'dd.M.yyyy' }}</mat-card-subtitle>
+  </mat-card-header>
   <mat-card-content>
-    <form *ngIf="userForm" [formGroup]="userForm" id="user-form">
+    <form [formGroup]="accountForm" id="account-form">
       <mat-form-field class="full-width">
         <mat-label>Name</mat-label>
-        <input matInput #name maxlength="45" placeholder="Name" formControlName="name" required>
+        <input matInput #name maxlength="45" formControlName="name" required>
       </mat-form-field>
       <mat-form-field class="full-width">
-        <mat-label>E-Mail</mat-label>
-        <input matInput #email maxlength="45" placeholder="E-Mail" formControlName="email" required>
+        <mat-label>Straße</mat-label>
+        <input matInput #street type="text" maxlength="45" formControlName="street">
       </mat-form-field>
       <mat-form-field class="full-width">
-        <mat-label>registration</mat-label>
-        <input matInput #registration type="text" placeholder="registration" formControlName="registration" required>
+        <mat-label>Hausnummer</mat-label>
+        <input matInput #streetNumber type="number" maxlength="10" formControlName="streetNumber">
       </mat-form-field>
       <mat-form-field class="full-width">
-        <mat-label>roles</mat-label>
-        <input matInput #roles maxlength="45" placeholder="roles" formControlName="roles" required>
+        <mat-label>PLZ</mat-label>
+        <input matInput #zip maxlength="6" type="number" formControlName="zip">
       </mat-form-field>
-      <button mat-raised-button color="primary" class="half-width"
-        (click)="toggleEdit()">{{ editable ? 'Rückgängig' : 'Bearbeiten' }}</button>
-      <button mat-raised-button type="submit" *ngIf="editable" class="half-width" (click)="save()">Speichern</button>
+      <mat-form-field class="full-width">
+        <mat-label>Stadt</mat-label>
+        <input matInput #city maxlength="45" type="text" formControlName="city">
+      </mat-form-field>
     </form>
   </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" class="half-width"
+      (click)="toggleAccountEdit()">{{ accountEditable ? 'Rückgängig' : 'Bearbeiten' }}</button>
+    <button mat-raised-button type="submit" form="account-form" *ngIf="accountEditable" class="half-width"
+      (click)="saveAccount()">Speichern</button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card style="margin: 32px;">
+  <mat-card-header>
+    <mat-card-title>Anmeldeinformationen</mat-card-title>
+    <mat-card-subtitle>Ändere deine E-Mailaddresse oder dein Passwort</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form *ngIf="account" [formGroup]="authForm" id="auth-form">
+      <mat-form-field class="full-width">
+        <mat-label>E-Mail</mat-label>
+        <input matInput #email type="email" maxlength="45" formControlName="email" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Altes Passwort</mat-label>
+        <input matInput #email type="password" minLength="6" maxlength="32" formControlName="oldPassword" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Neues Passwort</mat-label>
+        <input matInput #email type="password" minLength="6" maxlength="32" formControlName="password">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" class="half-width"
+      (click)="toggleAuthEdit()">{{ authEditable ? 'Rückgängig' : 'Bearbeiten' }}</button>
+    <button mat-raised-button type="submit" form="auth-form" *ngIf="authEditable" class="half-width"
+      (click)="saveAuth()">Speichern</button>
+  </mat-card-actions>
 </mat-card>
 
 <button mat-raised-button type="button" (click)="verify()">Verify</button>
-

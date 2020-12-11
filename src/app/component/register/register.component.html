@@ -21,10 +21,13 @@
         <input matInput #password_check minLength="6" maxlength="32" placeholder="Geben Sie ein Passwort ein"
           formControlName="passwordCheck" type="password" minlength="6" autocomplete="on" required>
       </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" class="half-width">Registrieren</button>
-      <button mat-button color="primary" type="button" class="half-width" [routerLink]="'/login'"
-        routerDirection="root">Login</button>
     </form>
 
   </mat-card-content>
+  <mat-card-actions style="text-align: center;">
+
+    <button mat-raised-button color="primary" type="submit" form="register-form">Registrieren</button>
+    <button mat-button type="button" [routerLink]="'/login'" routerDirection="root">Login</button>
+
+  </mat-card-actions>
 </mat-card>

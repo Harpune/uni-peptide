@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import * as Appwrite from "appwrite";
 import { Institute } from 'src/app/models/institute';
 import { Session } from 'src/app/models/session';
-import { Account } from 'src/app/models/account';
+import { Account, UserPreference } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Team } from 'src/app/models/team';
 import { User } from 'src/app/models/user';
@@ -50,8 +50,11 @@ export class AppwriteService {
     return new Promise<Account>(async (resolve, reject) => {
       try {
         // get current account
-        let user: Account = await this.appwrite.account.get() as Account
-        resolve(user)
+        console.log('Start get account')
+        let account: Account = await this.appwrite.account.get() as Account
+        account.prefs = await this.getAccountPrefs()
+        console.log('End get account', account)
+        resolve(account)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -69,6 +72,34 @@ export class AppwriteService {
         console.log('Start verififcation')
         let res = await this.appwrite.account.createVerification('http://localhost:4200/home')
         console.log('End verififcation', res)
+        resolve(res as any)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  async updateAccountName(name: string): Promise<Account> {
+    return new Promise<Account>(async (resolve, reject) => {
+      try {
+        console.log('Start update account name')
+        let res = await this.appwrite.account.updateName(name)
+        console.log('End update account name', res)
+        resolve(res as Account)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  async updateAccountEmail(email: string, password: string) {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        console.log('Start update email')
+        let res = await this.appwrite.account.updateEmail(email, password)
+        console.log('End update email', res)
         resolve()
       } catch (e) {
         this.handleError(e)
@@ -77,6 +108,47 @@ export class AppwriteService {
     })
   }
 
+  async updateAccountPassword(password: string, oldPassword: string) {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        console.log('Start update password')
+        let res = await this.appwrite.account.updatePassword(password, oldPassword)
+        console.log('End update password', res)
+        resolve()
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  async getAccountPrefs(): Promise<any> {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        console.log('Start get account preferences')
+        let res = await this.appwrite.account.getPrefs()
+        console.log('End get account preferences', res)
+        resolve(res)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  async updateAccountPrefs(prefs: object): Promise<UserPreference> {
+    return new Promise<UserPreference>(async (resolve, reject) => {
+      try {
+        console.log('Start update account preferences')
+        let res = await this.appwrite.account.updatePrefs(prefs)
+        console.log('End update account preferences', res)
+        resolve(res as UserPreference)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
 
   async createSession(email: string, password: string): Promise<object> {
     return new Promise<object>(async (resolve, reject) => {
@@ -114,47 +186,6 @@ export class AppwriteService {
           }
         }
 
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-    })
-  }
-
-  async createUser(data: any): Promise<User> {
-    return new Promise<User>(async (resolve, reject) => {
-      try {
-        console.log("data", data)
-        let user: User = await this.appwrite.database.createDocument(environment.userCollectionId, data, ['*'], ['*'], '', '', '') as User
-        resolve(user)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-    })
-  }
-
-  async listUser(): Promise<User[]> {
-    return new Promise<User[]>(async (resolve, reject) => {
-      try {
-        let res = await this.appwrite.database.listDocuments(environment.userCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
-        console.log('Users', res)
-        let users: User[] = (res as any)['documents'] as User[]
-        resolve(users)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-    })
-  }
-
-  async getUser(userId: string): Promise<User> {
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        console.log("user-id", userId)
-        let user: User = await this.appwrite.database.getDocument(environment.userCollectionId, userId) as User
-        console.log("user", user)
-        resolve(user)
       } catch (e) {
         this.handleError(e)
         reject()

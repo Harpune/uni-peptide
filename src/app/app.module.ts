@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsiveModule } from 'ngx-responsive'
+import { AvatarModule } from 'ngx-avatar';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -55,6 +56,7 @@ import { CreateInstituteComponent } from './component/institute-create/institute
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ResponsiveModule.forRoot(),
+    AvatarModule,
     HttpClientModule,
     MatSidenavModule,
     MatToolbarModule,

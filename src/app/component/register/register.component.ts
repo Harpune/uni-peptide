@@ -36,20 +36,10 @@ export class RegisterComponent implements OnInit {
     let password = this.registerForm.get('password')?.value;
     let passwordCheck = this.registerForm.get('passwordCheck')?.value;
 
-    console.log("name: " + name)
     if (password == passwordCheck) {
       try {
         let account = await this.appwriteService.createAccount(name, email, password)
-        console.log('createAccount', account)
         let session = await this.appwriteService.createSession(email, password)
-        console.log('createSession', session)
-        let user = {
-          name: account.name,
-          email: account.email,
-          account: account.$id
-        }
-        await this.appwriteService.createUser(user)
-        console.log('createUser', user)
         this.router.navigate(['/home'])
       } catch (e) {
         console.error(e)

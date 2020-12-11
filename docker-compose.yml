@@ -45,7 +45,7 @@ services:
             - influxdb
             - telegraf
         environment:
-            - _APP_ENV=production
+            - _APP_ENV=development
             - _APP_OPENSSL_KEY_V1=your-secret-key
             - _APP_DOMAIN=localhost
             - _APP_DOMAIN_TARGET=localhost
@@ -60,8 +60,11 @@ services:
             - _APP_INFLUXDB_PORT=8086
             - _APP_STATSD_HOST=telegraf
             - _APP_STATSD_PORT=8125
-            - _APP_SMTP_HOST=localhost
-            - _APP_SMTP_PORT=25
+            - _APP_SMTP_HOST=smtp.mailtrap.io
+            - _APP_SMTP_PORT=587
+            - _APP_SMTP_SECURE=tls
+            - _APP_SMTP_USERNAME=6a764ea019f320
+            - _APP_SMTP_USERNAME=8f757f25678743
     mariadb:
         image: appwrite/mariadb:1.0.3
         restart: unless-stopped

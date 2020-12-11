@@ -5,4 +5,10 @@ export interface Account {
     name: string;
     registration: number;
     roles: string[];
+    prefs: UserPreference;
+
+}
+
+export interface UserPreference {
+    [key: string]: any;
 }

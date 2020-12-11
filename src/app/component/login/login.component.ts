@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
     if (!this.loginForm.valid) {
       return;
     }
+    
     let email = this.loginForm.get('email')?.value;
     let password = this.loginForm.get('password')?.value;
 
@@ -58,7 +59,10 @@ export class LoginComponent implements OnInit {
     this.router.navigateByUrl('/register')
   }
 
-  resetPassword(){
-    console.log("asd")
+  resetPassword() {
+    this.snackBar.open('Wurde noch nicht implementiert', 'Ok', {
+      duration: 2000
+    })
+
   }
 }
