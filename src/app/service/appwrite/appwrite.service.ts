@@ -22,7 +22,7 @@ export class AppwriteService {
       .setProject(environment.projectId);
   }
 
-  async isLoggedIn(): Promise<boolean> {
+  isLoggedIn(): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       this.getAccount()
         .then(_ => resolve(true))
@@ -33,7 +33,7 @@ export class AppwriteService {
     })
   }
 
-  async createAccount(name: string, email: string, password: string): Promise<Account> {
+  createAccount(name: string, email: string, password: string): Promise<Account> {
     return new Promise(async (resolve, reject) => {
       try {
         // create new account -> register
@@ -46,7 +46,7 @@ export class AppwriteService {
     })
   }
 
-  async getAccount(): Promise<Account> {
+  getAccount(): Promise<Account> {
     return new Promise<Account>(async (resolve, reject) => {
       try {
         // get current account
@@ -62,16 +62,12 @@ export class AppwriteService {
     })
   }
 
-  async deleteAccount(id: string): Promise<object> {
-    return this.appwrite.account.deleteSession(id)
-  }
-
-  async verifyAccount(): Promise<any> {
+  createVerification(): Promise<any> {
     return new Promise<Account>(async (resolve, reject) => {
       try {
-        console.log('Start verififcation')
-        let res = await this.appwrite.account.createVerification('http://localhost:4200/home')
-        console.log('End verififcation', res)
+        console.log('Start create verififcation')
+        let res = await this.appwrite.account.createVerification('http://localhost:4200/verification')
+        console.log('End create verififcation', res)
         resolve(res as any)
       } catch (e) {
         this.handleError(e)
@@ -80,7 +76,49 @@ export class AppwriteService {
     })
   }
 
-  async updateAccountName(name: string): Promise<Account> {
+  updateVerification(userId: string, secret: string): Promise<any> {
+    return new Promise<Account>(async (resolve, reject) => {
+      try {
+        console.log('Start update verififcation')
+        let res = await this.appwrite.account.updateVerification(userId, secret)
+        console.log('End update verififcation', res)
+        resolve(res as any)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  createRecovery(email: string): Promise<any> {
+    return new Promise<Account>(async (resolve, reject) => {
+      try {
+        console.log('Start create recovery')
+        let res = await this.appwrite.account.createRecovery(email, 'http://localhost:4200/recovery')
+        console.log('End create recovery', res)
+        resolve(res as any)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  updateRecovery(userId: string, secret: string, password: string, passwordAgain: string,): Promise<any> {
+    return new Promise<Account>(async (resolve, reject) => {
+      try {
+        console.log('Start update recovery')
+        let res = await this.appwrite.account.updateRecovery(userId, secret, password, passwordAgain)
+        console.log('End update recovery', res)
+        resolve(res as any)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  updateAccountName(name: string): Promise<Account> {
     return new Promise<Account>(async (resolve, reject) => {
       try {
         console.log('Start update account name')
@@ -94,7 +132,7 @@ export class AppwriteService {
     })
   }
 
-  async updateAccountEmail(email: string, password: string) {
+  updateAccountEmail(email: string, password: string) {
     return new Promise<any>(async (resolve, reject) => {
       try {
         console.log('Start update email')
@@ -108,7 +146,7 @@ export class AppwriteService {
     })
   }
 
-  async updateAccountPassword(password: string, oldPassword: string) {
+  updateAccountPassword(password: string, oldPassword: string) {
     return new Promise<any>(async (resolve, reject) => {
       try {
         console.log('Start update password')
@@ -122,7 +160,7 @@ export class AppwriteService {
     })
   }
 
-  async getAccountPrefs(): Promise<any> {
+  getAccountPrefs(): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         console.log('Start get account preferences')
@@ -136,7 +174,7 @@ export class AppwriteService {
     })
   }
 
-  async updateAccountPrefs(prefs: object): Promise<UserPreference> {
+  updateAccountPrefs(prefs: object): Promise<UserPreference> {
     return new Promise<UserPreference>(async (resolve, reject) => {
       try {
         console.log('Start update account preferences')
@@ -150,11 +188,13 @@ export class AppwriteService {
     })
   }
 
-  async createSession(email: string, password: string): Promise<object> {
-    return new Promise<object>(async (resolve, reject) => {
+  deleteAccount(): Promise<any> {
+    return new Promise<any>(async (resolve, reject) => {
       try {
-        let session = await this.appwrite.account.createSession(email, password)
-        resolve(session)
+        console.log('Start delete account')
+        let res = await this.appwrite.account.delete()
+        console.log('End delete account', res)
+        resolve()
       } catch (e) {
         this.handleError(e)
         reject()
@@ -162,7 +202,19 @@ export class AppwriteService {
     })
   }
 
-  async getSessions(): Promise<Session[]> {
+  createSession(email: string, password: string): Promise<object> {
+    return new Promise<object>(async (resolve, reject) => {
+      try {
+        let session = await this.appwrite.account.createSession(email, password)
+        resolve(session)
+      } catch (e) {
+        this.handleError(e)
+        reject(e?.message)
+      }
+    })
+  }
+
+  getSessions(): Promise<Session[]> {
     return new Promise<Session[]>(async (resolve, reject) => {
       try {
         let sessions: Session[] = await this.appwrite.account.getSessions() as Session[]
@@ -174,7 +226,7 @@ export class AppwriteService {
     })
   }
 
-  async getCurrentSession(): Promise<Session> {
+  getCurrentSession(): Promise<Session> {
     return new Promise<Session>(async (resolve, reject) => {
       try {
         let sessions: Session[] = await this.getSessions()
@@ -193,7 +245,21 @@ export class AppwriteService {
     })
   }
 
-  async createInstitute(data: any): Promise<Institute> {
+  deleteSession(id: string): Promise<object> {
+    return new Promise<Account>(async (resolve, reject) => {
+      try {
+        console.log('Start delete session')
+        let res = await this.appwrite.account.deleteSession(id)
+        console.log('End delete session', res)
+        resolve()
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  createInstitute(data: any): Promise<Institute> {
     return new Promise<Institute>(async (resolve, reject) => {
       try {
         console.log("Create Institut", data)
@@ -217,7 +283,7 @@ export class AppwriteService {
     })
   }
 
-  async listInstitutes(): Promise<Institute[]> {
+  listInstitutes(): Promise<Institute[]> {
     return new Promise<Institute[]>(async (resolve, reject) => {
       try {
         // listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
@@ -233,7 +299,7 @@ export class AppwriteService {
     })
   }
 
-  async listInstitutesOfUser(teamIds: string[]): Promise<Institute[]> {
+  listInstitutesOfUser(teamIds: string[]): Promise<Institute[]> {
     return new Promise<Institute[]>(async (resolve, reject) => {
       try {
         // listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
@@ -249,7 +315,7 @@ export class AppwriteService {
     })
   }
 
-  async deleteInstitute(institute: Institute): Promise<object> {
+  deleteInstitute(institute: Institute): Promise<object> {
     return new Promise(async (resolve, reject) => {
       try {
         console.log('Delete institute', institute)
@@ -266,7 +332,7 @@ export class AppwriteService {
     })
   }
 
-  async createTeam(name: string): Promise<Team> {
+  createTeam(name: string): Promise<Team> {
     return new Promise<Team>(async (resolve, reject) => {
       try {
         // owner
@@ -284,7 +350,7 @@ export class AppwriteService {
     })
   }
 
-  async listTeams(): Promise<Team[]> {
+  listTeams(): Promise<Team[]> {
     return new Promise<Team[]>(async (resolve, reject) => {
       try {
         // get all teams
@@ -297,7 +363,7 @@ export class AppwriteService {
     })
   }
 
-  async getTeam(id: string): Promise<Team> {
+  getTeam(id: string): Promise<Team> {
     return new Promise<Team>(async (resolve, reject) => {
       try {
         let team: Team = await this.appwrite.teams.get(id) as Team
@@ -309,7 +375,7 @@ export class AppwriteService {
     })
   }
 
-  async deleteTeam(id: string): Promise<object> {
+  deleteTeam(id: string): Promise<object> {
     return new Promise<Team>(async (resolve, reject) => {
       try {
         console.log('Delete team-id', id)

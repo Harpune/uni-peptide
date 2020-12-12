@@ -6,6 +6,7 @@ import { User } from 'src/app/models/user';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -23,6 +24,7 @@ export class UserComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private snackbar: MatSnackBar,
+    private router: Router,
     private appwriteService: AppwriteService) {
 
     this.appwriteService.getAccount()
@@ -44,7 +46,19 @@ export class UserComponent implements OnInit {
   }
 
   verify() {
-    this.appwriteService.verifyAccount()
+    this.appwriteService.createVerification()
+  }
+
+  async deleteAccount() {
+    if (confirm('Wollen wirklich ihren Account löschen?')) {
+      try {
+        await this.appwriteService.deleteSession(this.account.$id)
+        await this.appwriteService.deleteAccount()
+        this.router.navigate(['/login'])
+      } catch (e) {
+        this.router.navigate(['/login'])
+      }
+    }
   }
 
   @HostListener('window:resize', ['$event'])

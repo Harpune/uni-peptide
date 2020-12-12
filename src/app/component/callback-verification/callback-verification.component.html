@@ -1,0 +1,9 @@
+<div class="center" *ngIf="!loading; else loadingDiv">
+  <h1>{{ verified ? "Dein Account wurde erfolgreich verifiziert!": "Dein Account konnte nicht verifiziert werden." }}
+  </h1>
+  <p><a [routerLink]="account ? '/home' : '/login'">{{account ? "Go Home" : "Log me in"}}</a></p>
+</div>
+
+<ng-template #loadingDiv>
+  <mat-spinner class="center"></mat-spinner>
+</ng-template>

@@ -24,6 +24,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 import { InstituteComponent } from './component/institute/institute.component';
 import { HomeComponent } from './component/home/home.component';
@@ -35,7 +38,8 @@ import { HttpErrorInterceptor } from './interceptor/http-error/http-error.interc
 import { UserComponent } from './component/user/user.component';
 import { TeamComponent } from './component/teams/teams.component';
 import { CreateInstituteComponent } from './component/institute-create/institute-create.component';
-
+import { RecoveryCallbackComponent } from './component/callback-recovery/callback-recovery.component';
+import { VerificationCallbackComponent } from './component/callback-verification/callback-verification.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +51,9 @@ import { CreateInstituteComponent } from './component/institute-create/institute
     RegisterComponent,
     UserComponent,
     TeamComponent,
-    CreateInstituteComponent
+    CreateInstituteComponent,
+    RecoveryCallbackComponent,
+    VerificationCallbackComponent
   ],
   imports: [
     CommonModule,
@@ -72,7 +78,9 @@ import { CreateInstituteComponent } from './component/institute-create/institute
     MatSortModule,
     MatGridListModule,
     MatTabsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

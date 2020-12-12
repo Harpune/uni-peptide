@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
 
   logout(): void {
     this.appwriteService.getCurrentSession()
-      .then((session: Session) => this.appwriteService.deleteAccount(session.$id))
+      .then((session: Session) => this.appwriteService.deleteSession(session.$id))
       .then((res) => this.storageService.removeCurrentUser())
       .finally(() => this.router.navigate(['/login']))
   }

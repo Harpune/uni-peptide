@@ -1,7 +1,10 @@
 <mat-card *ngIf="account" style="margin: 32px;">
+  <mat-icon matTooltip="Dieser Account ist verifiziert" style="position: absolute; top: 16px; right: 16px;" *ngIf="account.emailVerification">verified</mat-icon>
   <mat-card-header>
     <ngx-avatar mat-card-avatar [name]="account.name"></ngx-avatar>
-    <mat-card-title>{{ account.name }}</mat-card-title>
+    <mat-card-title>
+      {{ account.name }}
+    </mat-card-title>
     <mat-card-subtitle>Registriert seit {{account.registration * 1000 | date:'dd.M.yyyy' }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
@@ -37,7 +40,7 @@
   </mat-card-actions>
 </mat-card>
 
-<mat-card style="margin: 32px;">
+<mat-card *ngIf="account" style="margin: 32px;">
   <mat-card-header>
     <mat-card-title>Anmeldeinformationen</mat-card-title>
     <mat-card-subtitle>Ändere deine E-Mailaddresse oder dein Passwort</mat-card-subtitle>

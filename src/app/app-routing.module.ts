@@ -9,10 +9,14 @@ import { AuthGuard } from './guard/auth-guard.guard';
 import { UserComponent } from './component/user/user.component';
 import { TeamComponent } from './component/teams/teams.component';
 import { CreateInstituteComponent } from './component/institute-create/institute-create.component';
+import { RecoveryCallbackComponent } from './component/callback-recovery/callback-recovery.component';
+import { VerificationCallbackComponent } from './component/callback-verification/callback-verification.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'recovery', component: RecoveryCallbackComponent },
+  { path: 'verification', component: VerificationCallbackComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
   { path: 'institute', component: InstituteComponent, canActivate: [AuthGuard] },
