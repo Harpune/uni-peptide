@@ -18,7 +18,7 @@ export class UserComponent implements OnInit {
   authForm!: FormGroup
   accountEditable: boolean = false
   authEditable: boolean = false
-
+  verifying: boolean = true
   account!: Account
   breakpoint!: number
 
@@ -46,13 +46,16 @@ export class UserComponent implements OnInit {
   }
 
   verify() {
+    this.verifying = true
     this.appwriteService.createVerification()
+      .then(res => this.snackbar.open('Es wurde eine E-Mail an ' + this.account.email + ' versandt', 'Ok', { duration: 2000 }))
+      .catch(err => this.snackbar.open('Es wurde keine E-Mail gesendet.', 'Ok', { duration: 2000 }))
+      .finally(() => this.verifying = false)
   }
 
   async deleteAccount() {
     if (confirm('Wollen wirklich ihren Account löschen?')) {
       try {
-        await this.appwriteService.deleteSession(this.account.$id)
         await this.appwriteService.deleteAccount()
         this.router.navigate(['/login'])
       } catch (e) {

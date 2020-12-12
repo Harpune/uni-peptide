@@ -1,5 +1,12 @@
+<button *ngIf="account && !account.emailVerification" mat-raised-button type="button" (click)="verify()"
+  style="margin: 32px 32px 0 32px; width: -webkit-calc(100% - 64px);">
+  Verify
+  <!-- <mat-spinner style="margin: 0 auto;" [diameter]="16"></mat-spinner> -->
+</button>
+
 <mat-card *ngIf="account" style="margin: 32px;">
-  <mat-icon matTooltip="Dieser Account ist verifiziert" style="position: absolute; top: 16px; right: 16px;" *ngIf="account.emailVerification">verified</mat-icon>
+  <mat-icon matTooltip="Dieser Account ist verifiziert" style="position: absolute; top: 16px; right: 16px;"
+    *ngIf="account.emailVerification">verified</mat-icon>
   <mat-card-header>
     <ngx-avatar mat-card-avatar [name]="account.name"></ngx-avatar>
     <mat-card-title>
@@ -70,4 +77,13 @@
   </mat-card-actions>
 </mat-card>
 
-<button mat-raised-button type="button" (click)="verify()">Verify</button>
+<mat-card *ngIf="account" style="margin: 32px;">
+  <mat-card-header>
+    <mat-card-title>Account löschen</mat-card-title>
+    <mat-card-subtitle>Damit löschen Sie Ihren Account. Das kann nicht rückgängig gemacht werden!</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-actions style="text-align: center;">
+    <button mat-raised-button color="warn" class="half-width" (click)="deleteAccount()">Löschen</button>
+  </mat-card-actions>
+</mat-card>

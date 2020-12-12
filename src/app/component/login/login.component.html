@@ -15,14 +15,17 @@
     </form>
 
   </mat-card-content>
-  <mat-card-actions style="text-align: center;">
 
+  <mat-card-actions style="text-align: center;">
     <button mat-raised-button color="primary" form="login-form" type="submit">Login</button>
     <button mat-button type="button" (click)="register()">Register</button>
-
   </mat-card-actions>
+
   <mat-card-footer style="text-align: center;">
-    <p><a (click)="resetPassword()">Passwort vergessen?</a></p>
+    <p *ngIf="!sendingEmail; else spinner"><a (click)="resetPassword()">Passwort vergessen? </a></p>
+    <ng-template #spinner>
+      <mat-spinner style="margin: 0 auto;" [diameter]="25"></mat-spinner>
+    </ng-template>
   </mat-card-footer>
 
 </mat-card>

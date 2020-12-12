@@ -12,6 +12,7 @@ import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  sendingEmail: boolean = false
 
   constructor(private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
@@ -72,6 +73,7 @@ export class LoginComponent implements OnInit {
         duration: 2000
       })
     } else {
+      this.sendingEmail = true
       this.appwriteService.createRecovery(email)
         .then(res => {
           this.snackBar.open('Es wurde eine E-Mail an ' + email + ' gesendet.', 'Ok', { duration: 2000 })
@@ -79,6 +81,7 @@ export class LoginComponent implements OnInit {
         .catch(err => {
           this.snackBar.open('Es konnte keine E-Mail gesendet werden', 'Eintragen', { duration: 2000 })
         })
+        .finally(() => this.sendingEmail = false)
     }
   }
 }
