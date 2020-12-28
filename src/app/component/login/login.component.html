@@ -5,11 +5,11 @@
     <form [formGroup]="loginForm" id="login-form" (submit)="login()">
       <mat-form-field class="full-width">
         <mat-label>E-Mail</mat-label>
-        <input matInput #email maxlength="45" placeholder="Name des Instituts" formControlName="email" required>
+        <input matInput #email maxlength="45" formControlName="email" required>
       </mat-form-field>
       <mat-form-field class="full-width">
         <mat-label>Passwort</mat-label>
-        <input matInput #password minLength="6" maxlength="32" placeholder="Passwort" formControlName="password"
+        <input matInput #password minLength="6" maxlength="32" formControlName="password"
           type="password" autocomplete="on" required>
       </mat-form-field>
     </form>

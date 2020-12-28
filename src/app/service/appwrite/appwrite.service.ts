@@ -6,7 +6,6 @@ import { Session } from 'src/app/models/session';
 import { Account, UserPreference } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Team } from 'src/app/models/team';
-import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -132,13 +131,13 @@ export class AppwriteService {
     })
   }
 
-  updateAccountEmail(email: string, password: string) {
+  updateAccountEmail(email: string, password: string): Promise<Account> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         console.log('Start update email')
         let res = await this.appwrite.account.updateEmail(email, password)
         console.log('End update email', res)
-        resolve()
+        resolve(res as Account)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -146,13 +145,13 @@ export class AppwriteService {
     })
   }
 
-  updateAccountPassword(password: string, oldPassword: string) {
+  updateAccountPassword(password: string, oldPassword: string): Promise<Account> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         console.log('Start update password')
         let res = await this.appwrite.account.updatePassword(password, oldPassword)
         console.log('End update password', res)
-        resolve()
+        resolve(res as Account)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -160,13 +159,13 @@ export class AppwriteService {
     })
   }
 
-  getAccountPrefs(): Promise<any> {
-    return new Promise<any>(async (resolve, reject) => {
+  getAccountPrefs(): Promise<UserPreference> {
+    return new Promise<UserPreference>(async (resolve, reject) => {
       try {
         console.log('Start get account preferences')
         let res = await this.appwrite.account.getPrefs()
         console.log('End get account preferences', res)
-        resolve(res)
+        resolve(res as UserPreference)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -194,7 +193,7 @@ export class AppwriteService {
         console.log('Start delete account')
         let res = await this.appwrite.account.delete()
         console.log('End delete account', res)
-        resolve()
+        resolve(res)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -245,13 +244,13 @@ export class AppwriteService {
     })
   }
 
-  deleteSession(id: string): Promise<object> {
+  deleteSession(id: string): Promise<Account> {
     return new Promise<Account>(async (resolve, reject) => {
       try {
         console.log('Start delete session')
         let res = await this.appwrite.account.deleteSession(id)
         console.log('End delete session', res)
-        resolve()
+        resolve(res as Account)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -272,8 +271,13 @@ export class AppwriteService {
         let team: Team = await this.createTeam(data?.name)
         data.teamId = team.$id
 
-        // institute
-        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [current], [current], '', '', '') as Institute
+        // save team in user prefs
+        let prefs: UserPreference = await this.getAccountPrefs()
+        let teamIds = this.addTeamId(prefs["teamIds"], data.teamId)
+        this.updateAccountPrefs({teamIds: teamIds})
+
+        // create institute institute
+        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [current, '*'], [current], '', '', '') as Institute
         console.log('Created Institute', institute)
         resolve(institute)
       } catch (e) {
@@ -283,28 +287,24 @@ export class AppwriteService {
     })
   }
 
+  private addTeamId(together: string, toAdd:string): string {
+    if(together === undefined){
+      together = '[]'
+    }
+    let json = JSON.parse(together)
+    json.push(toAdd)
+    return JSON.stringify(json)
+  }
+
   listInstitutes(): Promise<Institute[]> {
     return new Promise<Institute[]>(async (resolve, reject) => {
       try {
         // listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
 
+        console.log('Start list institute')
         let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
-        let institutes: Institute[] = (res as any)['documents'] as Institute[]
-        resolve(institutes)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
+        console.log('End list institute', res)
 
-    })
-  }
-
-  listInstitutesOfUser(teamIds: string[]): Promise<Institute[]> {
-    return new Promise<Institute[]>(async (resolve, reject) => {
-      try {
-        // listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
-
-        let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, teamIds, 0, 50, 'name', '', '', '', 0, 0)
         let institutes: Institute[] = (res as any)['documents'] as Institute[]
         resolve(institutes)
       } catch (e) {
@@ -324,7 +324,7 @@ export class AppwriteService {
 
         // delete institute
         let res = await this.appwrite.database.deleteDocument(environment.instituteCollectionId, institute.$id)
-        resolve()
+        resolve(res)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -337,10 +337,11 @@ export class AppwriteService {
       try {
         // owner
         let account: Account = await this.getAccount()
-        let current = 'user:' + account.$id
+        let owner = 'owner'
+        console.log('Owner', owner)
 
         // create team
-        let team: Team = await this.appwrite.teams.create(name, [current]) as Team
+        let team: Team = await this.appwrite.teams.create(name, [owner]) as Team
         console.log('Created Team', team)
         resolve(team)
       } catch (e) {
@@ -355,6 +356,8 @@ export class AppwriteService {
       try {
         // get all teams
         let res: any = await this.appwrite.teams.list('', 10, 0, 'DESC')
+        console.log('List Team', res)
+
         resolve(res?.teams as Team[])
       } catch (e) {
         this.handleError(e)
@@ -367,6 +370,7 @@ export class AppwriteService {
     return new Promise<Team>(async (resolve, reject) => {
       try {
         let team: Team = await this.appwrite.teams.get(id) as Team
+        console.log('Get Team by ID', id, team)
         resolve(team)
       } catch (e) {
         this.handleError(e)
@@ -375,16 +379,16 @@ export class AppwriteService {
     })
   }
 
-  deleteTeam(id: string): Promise<object> {
+  deleteTeam(id: string): Promise<any> {
     return new Promise<Team>(async (resolve, reject) => {
       try {
-        console.log('Delete team-id', id)
-        await this.appwrite.teams.delete(id)
-        resolve()
+        console.log('Delete team', id)
+        let res = await this.appwrite.teams.delete(id) as Team
+        resolve(res)
       } catch (e) {
         this.handleError(e)
         //TODO: must be reject but runs in 500-Error reject()
-        resolve()
+        reject()
       }
     })
   }

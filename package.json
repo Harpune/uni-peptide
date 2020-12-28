@@ -26,6 +26,7 @@
     "d3": "^6.3.1",
     "ngx-avatar": "^4.0.0",
     "ngx-device-detector": "^2.0.4",
+    "ngx-file-drop": "^10.1.1",
     "ngx-responsive": "^9.0.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

@@ -40,6 +40,7 @@ import { TeamComponent } from './component/teams/teams.component';
 import { CreateInstituteComponent } from './component/institute-create/institute-create.component';
 import { RecoveryCallbackComponent } from './component/callback-recovery/callback-recovery.component';
 import { VerificationCallbackComponent } from './component/callback-verification/callback-verification.component';
+import { InstituteDetailsComponent } from './component/institute-details/institute-details.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { VerificationCallbackComponent } from './component/callback-verification
     TeamComponent,
     CreateInstituteComponent,
     RecoveryCallbackComponent,
-    VerificationCallbackComponent
+    VerificationCallbackComponent,
+    InstituteDetailsComponent
   ],
   imports: [
     CommonModule,

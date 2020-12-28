@@ -4,10 +4,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Institute } from 'src/app/models/institute';
-import { Team } from 'src/app/models/team';
 import { Account } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { environment } from 'src/environments/environment'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -20,20 +20,25 @@ export class HomeComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = ['teamId', 'name', 'organisation', 'address', 'delete']
-  
+
   dataSource!: MatTableDataSource<Institute>;
   breakpoint!: number;
-  constructor(private appwriteService: AppwriteService) { }
+  constructor(private appwriteService: AppwriteService,
+    private router: Router) { }
 
   ngOnInit(): void {
-    this.breakpoint = (window.innerWidth <= environment.mobileSize) ? 1 : 2
-
+    this.setBreakpoints(window.innerWidth)
     this.getInstitutesOfUser()
+  }
+
+  public showInstitute(institute: Institute) {
+    this.router.navigate(['institute/' + institute.$id])
   }
 
   private async getInstitutesOfUser() {
     let user: Account = await this.appwriteService.getAccount()
     console.log(user)
+
     this.appwriteService.listInstitutes()
       .then((institutes: Institute[]) => {
         this.dataSource = new MatTableDataSource(institutes)
@@ -42,9 +47,20 @@ export class HomeComponent implements OnInit {
       })
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.breakpoint = (event.target.innerWidth <= environment.mobileSize) ? 1 : 2
+  setBreakpoints(width: number) {
+    if (width <= environment.mobileSize) {
+      this.breakpoint = 1
+    } else if (width <= environment.tabletSize) {
+      this.breakpoint = 2
+    } else if (width <= environment.desktopSize) {
+      this.breakpoint = 3
+    } else {
+      this.breakpoint = 4
+    }
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.setBreakpoints(event.target.innerWidth)
+  }
 }

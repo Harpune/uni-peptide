@@ -1,6 +1,9 @@
 export const environment = {
   production: false,
-  mobileSize: 500,
+  mobileSize: 576,
+  tabletSize: 768,
+  desktopSize: 992,
+  largeSize: 1200,
 
   // appwrite
   instituteCollectionId: '5fd141d013ecd',
