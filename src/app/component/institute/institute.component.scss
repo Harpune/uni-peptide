@@ -1,19 +1,10 @@
-.full-width {
-  width: 100%;
-}
-
-form {
-  margin: 0 auto;
-}
+@import "../../../styles.scss";
 
 .form-card {
+  cursor: pointer;
   max-width: 512px;
   margin: 0 auto;
   margin-top: 32px;
-}
-
-.table-icon-column {
-  max-width: 10px;
 }
 
 .fab-bottom-right {

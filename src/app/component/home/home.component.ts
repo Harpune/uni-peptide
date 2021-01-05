@@ -4,10 +4,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Institute } from 'src/app/models/institute';
-import { Account } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { environment } from 'src/environments/environment'
 import { Router } from '@angular/router';
+import { NestedTreeControl } from '@angular/cdk/tree';
 
 @Component({
   selector: 'app-home',
@@ -16,15 +16,19 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator
+  @ViewChild(MatSort) sort!: MatSort
 
-  displayedColumns: string[] = ['teamId', 'name', 'organisation', 'address', 'delete']
+  displayedColumns: string[] = ['teamId', 'name', 'organisation', 'address']
 
-  dataSource!: MatTableDataSource<Institute>;
-  breakpoint!: number;
+  dataSource!: MatTableDataSource<Institute>
+  breakpoint!: number
+
+  treeControl!: any
+
   constructor(private appwriteService: AppwriteService,
-    private router: Router) { }
+    private router: Router) {
+  }
 
   ngOnInit(): void {
     this.setBreakpoints(window.innerWidth)
@@ -35,15 +39,16 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['institute/' + institute.$id])
   }
 
-  private async getInstitutesOfUser() {
-    let user: Account = await this.appwriteService.getAccount()
-    console.log(user)
+  public leaveInstitute(institute: Institute) {
+    console.log('ASAS', institute)
+  }
 
-    this.appwriteService.listInstitutes()
+  private async getInstitutesOfUser() {
+    this.appwriteService.listInstitutesOfCurrent()
       .then((institutes: Institute[]) => {
         this.dataSource = new MatTableDataSource(institutes)
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator
+        this.dataSource.sort = this.sort
       })
   }
 

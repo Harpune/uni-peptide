@@ -12,6 +12,7 @@ import { CreateInstituteComponent } from './component/institute-create/institute
 import { RecoveryCallbackComponent } from './component/callback-recovery/callback-recovery.component';
 import { VerificationCallbackComponent } from './component/callback-verification/callback-verification.component';
 import { InstituteDetailsComponent } from './component/institute-details/institute-details.component';
+import { ProjectComponent } from './component/project/project.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,8 +22,9 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
   { path: 'institute', component: InstituteComponent, canActivate: [AuthGuard] },
-  { path: 'institute/:id', component: InstituteDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'institute/:instituteId', component: InstituteDetailsComponent, canActivate: [AuthGuard] },
   { path: 'institute/create', component: CreateInstituteComponent, canActivate: [AuthGuard] },
+  { path: 'institute/:instituteId/project/:projectId', component: ProjectComponent, canActivate: [AuthGuard] },
   { path: 'team', component: TeamComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full', canActivate: [AuthGuard] },
   { path: '**', component: PageNotFoundComponent },

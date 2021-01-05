@@ -16,6 +16,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $default-app-primary: mat-palette($mat-red, A100, A200, A400);
+$default-app-primary-tint: mat-palette($mat-red, 100);
 $default-app-accent:  mat-palette($mat-indigo, A200, A100, A400);
 $default-app-warn:    mat-palette($mat-red);
 

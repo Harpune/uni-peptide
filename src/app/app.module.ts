@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsiveModule } from 'ngx-responsive'
 import { AvatarModule } from 'ngx-avatar';
+import { CdkStepperModule } from '@angular/cdk/stepper';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,7 +27,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { MatTreeModule } from '@angular/material/tree';
 
 import { InstituteComponent } from './component/institute/institute.component';
 import { HomeComponent } from './component/home/home.component';
@@ -41,6 +42,8 @@ import { CreateInstituteComponent } from './component/institute-create/institute
 import { RecoveryCallbackComponent } from './component/callback-recovery/callback-recovery.component';
 import { VerificationCallbackComponent } from './component/callback-verification/callback-verification.component';
 import { InstituteDetailsComponent } from './component/institute-details/institute-details.component';
+import { CreateProjectComponent } from './component/project-create/project-create.component';
+import { ProjectComponent } from './component/project/project.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,9 @@ import { InstituteDetailsComponent } from './component/institute-details/institu
     CreateInstituteComponent,
     RecoveryCallbackComponent,
     VerificationCallbackComponent,
-    InstituteDetailsComponent
+    InstituteDetailsComponent,
+    CreateProjectComponent,
+    ProjectComponent
   ],
   imports: [
     CommonModule,
@@ -82,7 +87,9 @@ import { InstituteDetailsComponent } from './component/institute-details/institu
     MatTabsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatTreeModule,
+    CdkStepperModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

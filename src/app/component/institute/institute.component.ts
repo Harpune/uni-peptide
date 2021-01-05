@@ -17,7 +17,7 @@ export class InstituteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
 
-  displayedColumns: string[] = ['teamId', 'name', 'organisation', 'address', 'delete']
+  displayedColumns: string[] = ['teamId', 'name', 'organisation', 'address']
   start: number = 0
   end: number = 10
   isLoading: boolean = true
@@ -43,9 +43,9 @@ export class InstituteComponent implements OnInit {
     });
   }
 
-  delete(institute: Institute) {
-    this.appwriteService.deleteInstitute(institute)
-      .finally(() => this.getInstitutes())
+  add(institute: Institute) {
+    this.appwriteService.addInstituteToUser(institute.$id)
+      .then(res => console.log(res))
   }
 
   openDialog(): void {
@@ -57,10 +57,7 @@ export class InstituteComponent implements OnInit {
       }
     })
 
-    dialogRef.afterClosed().subscribe(res => {
-      this.appwriteService.createInstitute(res as Institute)
-        .then((_) => this.getInstitutes())
-    })
+    dialogRef.afterClosed().subscribe(res => this.getInstitutes())
   }
 
   private getInstitutes() {

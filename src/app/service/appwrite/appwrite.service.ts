@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment'
 import { Injectable } from '@angular/core';
 import * as Appwrite from "appwrite";
-import { Institute } from 'src/app/models/institute';
+import { Institute, Project } from 'src/app/models/institute';
 import { Session } from 'src/app/models/session';
 import { Account, UserPreference } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,7 +18,7 @@ export class AppwriteService {
     // init appwrite
     this.appwrite
       .setEndpoint(environment.endpointURL)
-      .setProject(environment.projectId);
+      .setProject(environment.projectId)
   }
 
   isLoggedIn(): Promise<boolean> {
@@ -36,7 +36,9 @@ export class AppwriteService {
     return new Promise(async (resolve, reject) => {
       try {
         // create new account -> register
+        console.log('Start create account', name, email)
         let account = await this.appwrite.account.create(email, password, name)
+        console.log('End create account', account)
         resolve(account as Account)
       } catch (e) {
         this.handleError(e)
@@ -204,7 +206,10 @@ export class AppwriteService {
   createSession(email: string, password: string): Promise<object> {
     return new Promise<object>(async (resolve, reject) => {
       try {
+        console.log('Start create session', email, password)
         let session = await this.appwrite.account.createSession(email, password)
+        console.log('End create session', session)
+
         resolve(session)
       } catch (e) {
         this.handleError(e)
@@ -251,80 +256,6 @@ export class AppwriteService {
         let res = await this.appwrite.account.deleteSession(id)
         console.log('End delete session', res)
         resolve(res as Account)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-    })
-  }
-
-  createInstitute(data: any): Promise<Institute> {
-    return new Promise<Institute>(async (resolve, reject) => {
-      try {
-        console.log("Create Institut", data)
-
-        // owner
-        let account: Account = await this.getAccount()
-        let current = 'user:' + account.$id
-
-        // team reference
-        let team: Team = await this.createTeam(data?.name)
-        data.teamId = team.$id
-
-        // save team in user prefs
-        let prefs: UserPreference = await this.getAccountPrefs()
-        let teamIds = this.addTeamId(prefs["teamIds"], data.teamId)
-        this.updateAccountPrefs({teamIds: teamIds})
-
-        // create institute institute
-        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [current, '*'], [current], '', '', '') as Institute
-        console.log('Created Institute', institute)
-        resolve(institute)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-    })
-  }
-
-  private addTeamId(together: string, toAdd:string): string {
-    if(together === undefined){
-      together = '[]'
-    }
-    let json = JSON.parse(together)
-    json.push(toAdd)
-    return JSON.stringify(json)
-  }
-
-  listInstitutes(): Promise<Institute[]> {
-    return new Promise<Institute[]>(async (resolve, reject) => {
-      try {
-        // listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
-
-        console.log('Start list institute')
-        let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
-        console.log('End list institute', res)
-
-        let institutes: Institute[] = (res as any)['documents'] as Institute[]
-        resolve(institutes)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-
-    })
-  }
-
-  deleteInstitute(institute: Institute): Promise<object> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        console.log('Delete institute', institute)
-        // delete team reference
-        await this.deleteTeam(institute.teamId)
-
-        // delete institute
-        let res = await this.appwrite.database.deleteDocument(environment.instituteCollectionId, institute.$id)
-        resolve(res)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -389,6 +320,234 @@ export class AppwriteService {
         this.handleError(e)
         //TODO: must be reject but runs in 500-Error reject()
         reject()
+      }
+    })
+  }
+
+  createInstitute(data: any): Promise<Institute> {
+    return new Promise<Institute>(async (resolve, reject) => {
+      try {
+        console.log("Create Institut", data)
+
+        // owner
+        let account: Account = await this.getAccount()
+        let current = 'user:' + account.$id
+
+        // team reference
+        let team: Team = await this.createTeam(data?.name)
+        data.teamId = team.$id
+
+        // create institute institute
+        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [current, '*'], [current], '', '', '') as Institute
+        console.log('Created Institute', institute)
+
+        // save team in user prefs
+        let prefs: UserPreference = await this.getAccountPrefs()
+        let institutes = this.addTeamId(prefs['institutes'], institute.$id)
+        this.updateAccountPrefs({ institutes: institutes })
+
+        resolve(institute)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  private addTeamId(together: string, toAdd: string): string {
+    if (together === undefined) {
+      together = '[]'
+    }
+    let json = JSON.parse(together)
+    json.push(toAdd)
+    return JSON.stringify(json)
+  }
+
+  listInstitutes(): Promise<Institute[]> {
+    return new Promise<Institute[]>(async (resolve, reject) => {
+      try {
+        console.log('Start list institute')
+        // 	    listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
+        let res = await this.appwrite.database.listDocuments(
+          environment.instituteCollectionId, // collectionId
+          [], // filters
+          0, // offset
+          50, // limit
+          'name', // orderField
+          '', // orderType
+          '', // orderCast
+          '', // search
+          0, // first
+          0 // last
+        );
+        console.log('End list institute', res)
+
+        let institutes: Institute[] = (res as any)['documents'] as Institute[]
+        resolve(institutes)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+
+    })
+  }
+
+  listInstitutesOfCurrent(): Promise<Institute[]> {
+    return new Promise<Institute[]>(async (resolve, reject) => {
+      try {
+        console.log('Start list institutes of user')
+        // let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
+
+        let account: Account = await this.getAccount()
+        let instituteIds = account.prefs['institutes'] ? JSON.parse(account.prefs['institutes']) : []
+
+        let institutes: Institute[] = []
+        for (let id of instituteIds) {
+          let institute: Institute = await this.getInstitute(id)
+          institutes.push(institute)
+        }
+
+        resolve(institutes)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+
+    })
+  }
+
+  addInstituteToUser(id: string): Promise<Institute[]> {
+    return new Promise<Institute[]>(async (resolve, reject) => {
+      try {
+        console.log('Start add institute to user', id)
+
+        // save team in user prefs
+        let prefs: UserPreference = await this.getAccountPrefs()
+        console.log('prefs', prefs['institutes'])
+        let institutes = this.addTeamId(prefs['institutes'], id)
+        console.log('institutes', institutes)
+        this.updateAccountPrefs({ institutes: institutes })
+
+        let res = await this.listInstitutesOfCurrent()
+        resolve(res as Institute[])
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  removeInstituteFromUser(id: string): Promise<Institute[]> {
+    return new Promise<Institute[]>(async (resolve, reject) => {
+      try {
+        console.log('Start list institutes of user')
+        // let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
+
+        let account: Account = await this.getAccount()
+        let instituteIds = account.prefs['institutes'] ? JSON.parse(account.prefs['institutes']) : []
+        console.log('instituteIds', instituteIds)
+
+        let institutes: Institute[] = []
+        for (let id of instituteIds) {
+          let institute: Institute = await this.getInstitute(id)
+          institutes.push(institute)
+        }
+
+        resolve(institutes)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+
+    })
+  }
+
+  getInstitute(id: string): Promise<Institute> {
+    return new Promise<Institute>(async (resolve, reject) => {
+      try {
+        console.log('Start get institute', id)
+        let res = await this.appwrite.database.getDocument(environment.instituteCollectionId, id)
+        console.log('End get institute', res)
+        resolve(res as Institute)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  updateInstitute(institute: Institute): Promise<Institute> {
+    return new Promise<Institute>(async (resolve, reject) => {
+      try {
+        console.log('Start update institute', institute)
+        let res = await this.appwrite.database.updateDocument(environment.instituteCollectionId, institute.$id, institute, institute.$permissions.read, institute.$permissions.write)
+        console.log('End update institute', res)
+        resolve(res as Institute)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  deleteInstitute(institute: Institute): Promise<object> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log('Delete institute', institute)
+        // delete team reference
+        await this.deleteTeam(institute.teamId)
+
+        // delete institute
+        let res = await this.appwrite.database.deleteDocument(environment.instituteCollectionId, institute.$id)
+        resolve(res)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+    })
+  }
+
+  createProject(data: any, instituteId: string): Promise<Project> {
+    return new Promise<Project>(async (resolve, reject) => {
+      try {
+        console.log('Start add project')
+
+        // owner
+        let account: Account = await this.getAccount()
+        let current = 'user:' + account.$id
+
+        // create project
+        let res = await this.appwrite.database.createDocument(environment.projectCollectionId, data, [current], [current], '', '', '')
+        let project: Project = res as Project
+
+        // add project to institute
+        let institute = await this.getInstitute(instituteId)
+        if (!institute.projects) {
+          institute.projects = []
+        }
+        institute.projects.push(project)
+        console.log('institute.projectIds', institute.projects)
+        institute = await this.updateInstitute(institute)
+
+        console.log('End add project', res, institute)
+        resolve(res as Project)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  getProject(id: string): Promise<Project> {
+    return new Promise<Project>(async (resolve, reject) => {
+      try {
+        console.log('Start get project', id)
+        let res = await this.appwrite.database.getDocument(environment.projectCollectionId, id)
+        console.log('End get Project', res)
+        resolve(res as Project)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
       }
     })
   }

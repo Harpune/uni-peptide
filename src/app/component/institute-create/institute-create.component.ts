@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Institute } from 'src/app/models/institute';
+import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 
 @Component({
   selector: 'app-institute-create',
@@ -12,7 +13,8 @@ export class CreateInstituteComponent implements OnInit {
   instituteForm!: FormGroup
 
 
-  constructor(public dialogRef: MatDialogRef<CreateInstituteComponent>,
+  constructor(private appwriteService: AppwriteService,
+    public dialogRef: MatDialogRef<CreateInstituteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Institute,
     private formBuilder: FormBuilder) { }
 
@@ -30,7 +32,14 @@ export class CreateInstituteComponent implements OnInit {
       return;
     }
 
-    this.dialogRef.close(this.data);
+    let institute: Institute = this.instituteForm.value as Institute
+    let now: Date = new Date()
+    institute.created = now.toISOString()
+    institute.updated = now.toISOString()
+
+    this.appwriteService.createInstitute(institute)
+      .then(institute => console.log('institute', institute))
+      .finally(() => this.dialogRef.close(this.data))
   }
 
 }
