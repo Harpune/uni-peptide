@@ -10,3 +10,27 @@
 // .mat-row:hover {
 //   background-color: mat-color($default-app-primary-tint);
 // }
+
+.fab-bottom-right {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+  width: unset;
+}
+
+.extended-fab-button {
+  width: unset;
+  padding: 0 26px;
+  border-radius: 29px;
+
+  .mat-icon {
+    margin-right: 10px;
+  }
+
+  .extended-fab-button-text {
+    font-weight: 300;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+}

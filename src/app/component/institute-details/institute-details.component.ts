@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Institute, Project } from 'src/app/models/institute';
 import { Membership } from 'src/app/models/team';
-import { Account, AccountPreference } from 'src/app/models/account';
+import { Account } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { CreateInstituteMemberComponent } from '../institute-create-member/institute-create-member.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
@@ -172,15 +172,24 @@ export class InstituteDetailsComponent implements OnInit {
     }
   }
 
-  async leaveInstitute() {
+  async leaveInstitute(membership?: Membership) {
+    console.log('Element', membership)
     if (confirm('Wollen wirklich das Institut verlassen?')) {
       try {
-        let accountPrefs: AccountPreference = await this.appwriteService.getAccountPrefs()
-        if (accountPrefs['inviteId']) {
-          this.appwriteService.deleteMembershipStatus(this.institute.teamId, accountPrefs['inviteId'])
+        if (!membership) {
+          membership = this.membershipData.data.find(membership => membership.userId === this.account.$id)
+        }
+
+        if (membership) {
+          await this.appwriteService.deleteMembershipStatus(this.institute.teamId, membership.$id)
+        } else {
+          console.log('Could not delete membership', 'No membership found', membership)
         }
 
       } catch (e) {
+        console.log('Could not delete membership', e)
+      } finally {
+        this.getMembers()
       }
     }
   }

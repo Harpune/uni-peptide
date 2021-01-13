@@ -10,6 +10,7 @@ import { ResponsiveModule } from 'ngx-responsive'
 import { AvatarModule } from 'ngx-avatar';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -97,7 +98,8 @@ import { MemberInvitationCallbackComponent } from './component/callback-member-i
     MatTooltipModule,
     MatTreeModule,
     CdkStepperModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    NgxDropzoneModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

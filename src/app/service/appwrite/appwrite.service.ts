@@ -605,6 +605,21 @@ export class AppwriteService {
     })
   }
 
+  uploadFile(file: File, ids: string[] = ["*"]): Promise<object> {
+    return new Promise<object>(async (resolve, reject) => {
+      try {
+
+        console.log('Start upload file', file)
+        let res = await this.appwrite.storage.createFile(file, ids, ids)
+        console.log('End upload file', file)
+        resolve(res)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
   private handleError(error: AppwriteError): any {
     console.log('Error', error)
     if (!error) {

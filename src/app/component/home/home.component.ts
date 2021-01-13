@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment'
 import { Router } from '@angular/router';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { User } from 'src/app/models/user';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateInstituteComponent } from '../institute-create/institute-create.component';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +31,7 @@ export class HomeComponent implements OnInit {
   treeControl!: any
 
   constructor(private appwriteService: AppwriteService,
+    private dialog: MatDialog,
     private router: Router) {
   }
 
@@ -53,6 +56,18 @@ export class HomeComponent implements OnInit {
       this.instituteData.sort = this.sort
     } catch (e) {
     }
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(CreateInstituteComponent, {
+      data: {
+        name: null,
+        organisation: null,
+        address: null
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(res => this.getInstitutesOfUser())
   }
 
   setBreakpoints(width: number) {

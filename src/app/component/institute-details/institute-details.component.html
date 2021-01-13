@@ -1,6 +1,6 @@
-<section class="mat-typography" style="margin: 32px;" *ngIf="institute">
-  <h1>{{institute.name}}</h1>
-  <h4>{{institute.organisation}}</h4>
+<section class="mat-typography" style="margin: 32px;">
+  <h1>{{institute ? institute.name : "Name"}}</h1>
+  <h4>{{institute ? institute.organisation : "Organisation"}}</h4>
 </section>
 <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="16px" fxLayoutAlign="space-around">
   <div class="mat-typography flex-item">
@@ -72,8 +72,10 @@
 
           <ng-container matColumnDef="owner">
             <th mat-sort-header mat-header-cell *matHeaderCellDef> Admin </th>
-            <td mat-cell *matCellDef="let element" style="text-align: center;">
-              <mat-icon color="warn">delete</mat-icon>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button color="warn" (click)="leaveInstitute(element)">
+                <mat-icon>cancel</mat-icon>
+              </button>
             </td>
           </ng-container>
 
@@ -101,13 +103,13 @@
   <section class="mat-typography">
     <h4>Verwaltung</h4>
     <mat-list>
-      <mat-list-item (click)="leaveInstitute()">
+      <mat-list-item disabled (click)="leaveInstitute()">
         <mat-icon color="warn" mat-list-icon>cancel</mat-icon>
         <div mat-line>Verlassen</div>
         <div mat-line>Damit Verlassen Sie das Institut. Sie können anschließend nicht mehr auf die Daten zugreifen und
           müssen erneut eingeladen werden.</div>
       </mat-list-item>
-      <mat-list-item *ngIf="isOwner" (click)="deleteInstitute()">
+      <mat-list-item disabled *ngIf="isOwner" (click)="deleteInstitute()">
         <mat-icon color="warn" mat-list-icon>delete</mat-icon>
         <div mat-line>Löschen</div>
         <div mat-line>Damit Löschen Sie das Institut und alle Daten die darin gespeichert sind, gehen verloren.</div>
