@@ -8,3 +8,15 @@ export interface Team {
     name: string;
     sum: number;
 }
+
+export interface Membership {
+    $id: string;
+    confirm: boolean;
+    email: string;
+    invited: number;
+    joined: number;
+    name: string;
+    roles: string[];
+    teamId: string;
+    userId: string;
+}

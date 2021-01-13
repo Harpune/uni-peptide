@@ -9,6 +9,7 @@ export const environment = {
   projectCollectionId: '5ff3765c0b89a',
   peptideLibraryCollectionId: '5ff376e543b29',
   endpointURL: 'http://localhost/v1',
+  url: 'http://localhost:4200',
 
 
   // appwrite

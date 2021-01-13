@@ -1,10 +1,10 @@
 <mat-dialog-content>
-
+  <h3>Neues Projekt anlegen</h3>
   <form [formGroup]="projectForm" id="project-form" (submit)="submit()">
     <mat-form-field class="full-width">
       <mat-label>Name</mat-label>
-      <input matInput #institute maxlength="45" formControlName="name" required>
-      <mat-hint align="end">{{institute.value.length}} / 45</mat-hint>
+      <input matInput #name maxlength="45" formControlName="name" required>
+      <mat-hint align="end">{{name.value.length}} / 45</mat-hint>
     </mat-form-field>
     <mat-form-field class="full-width">
       <mat-label>Beschreibung</mat-label>

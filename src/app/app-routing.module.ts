@@ -13,12 +13,14 @@ import { RecoveryCallbackComponent } from './component/callback-recovery/callbac
 import { VerificationCallbackComponent } from './component/callback-verification/callback-verification.component';
 import { InstituteDetailsComponent } from './component/institute-details/institute-details.component';
 import { ProjectComponent } from './component/project/project.component';
+import { MemberInvitationCallbackComponent } from './component/callback-member-invitation/callback-member-invitation.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'recovery', component: RecoveryCallbackComponent },
   { path: 'verification', component: VerificationCallbackComponent },
+  { path: 'invitation', component: MemberInvitationCallbackComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
   { path: 'institute', component: InstituteComponent, canActivate: [AuthGuard] },

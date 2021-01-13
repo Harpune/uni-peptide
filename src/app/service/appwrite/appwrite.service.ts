@@ -5,7 +5,7 @@ import { Institute, Project } from 'src/app/models/institute';
 import { Session } from 'src/app/models/session';
 import { Account, UserPreference } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Team } from 'src/app/models/team';
+import { Membership, Team } from 'src/app/models/team';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +67,7 @@ export class AppwriteService {
     return new Promise<Account>(async (resolve, reject) => {
       try {
         console.log('Start create verififcation')
-        let res = await this.appwrite.account.createVerification('http://localhost:4200/verification')
+        let res = await this.appwrite.account.createVerification(environment.url + '/verification')
         console.log('End create verififcation', res)
         resolve(res as any)
       } catch (e) {
@@ -95,7 +95,7 @@ export class AppwriteService {
     return new Promise<Account>(async (resolve, reject) => {
       try {
         console.log('Start create recovery')
-        let res = await this.appwrite.account.createRecovery(email, 'http://localhost:4200/recovery')
+        let res = await this.appwrite.account.createRecovery(email, environment.url + '/recovery')
         console.log('End create recovery', res)
         resolve(res as any)
       } catch (e) {
@@ -285,9 +285,9 @@ export class AppwriteService {
   listTeams(): Promise<Team[]> {
     return new Promise<Team[]>(async (resolve, reject) => {
       try {
-        // get all teams
+        console.log('Start list team')
         let res: any = await this.appwrite.teams.list('', 10, 0, 'DESC')
-        console.log('List Team', res)
+        console.log('End list Team', res)
 
         resolve(res?.teams as Team[])
       } catch (e) {
@@ -300,12 +300,60 @@ export class AppwriteService {
   getTeam(id: string): Promise<Team> {
     return new Promise<Team>(async (resolve, reject) => {
       try {
-        let team: Team = await this.appwrite.teams.get(id) as Team
-        console.log('Get Team by ID', id, team)
-        resolve(team)
+        console.log('Start get team', id)
+        let res = await this.appwrite.teams.get(id)
+        console.log('End get team', res)
+
+        resolve(res as Team)
       } catch (e) {
         this.handleError(e)
         reject()
+      }
+    })
+  }
+
+  getTeamMemberships(teamId: string): Promise<Membership[]> {
+    return new Promise<Membership[]>(async (resolve, reject) => {
+      try {
+        console.log('Start get team-memberships', teamId)
+        let res = await this.appwrite.teams.getMemberships(teamId)
+        console.log('End get team-memberships', res)
+
+        resolve(res as Membership[])
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  createMembership(teamId: string, email: string, name: string): Promise<Membership> {
+    return new Promise<Membership>(async (resolve, reject) => {
+      try {
+        console.log('Start create membership', teamId, email, name)
+        let res = await this.appwrite.teams.createMembership(teamId, email, ['member'], environment.url + '/invitation', name)
+        console.log('End create membership', res)
+
+        resolve(res as Membership)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+  // 	    updateMembershipStatus(teamId: string, inviteId: string, userId: string, secret: string): Promise<object>;
+
+  updateMembershipStatus(teamId: string, inviteId: string, userId: string, secret: string): Promise<Membership> {
+    return new Promise<Membership>(async (resolve, reject) => {
+      try {
+        console.log('Start update membership', teamId, inviteId, userId, secret)
+        let res = await this.appwrite.teams.updateMembershipStatus(teamId, inviteId, userId, secret)
+        console.log('End update membership', res)
+
+        resolve(res as Membership)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
       }
     })
   }
@@ -331,14 +379,15 @@ export class AppwriteService {
 
         // owner
         let account: Account = await this.getAccount()
-        let current = 'user:' + account.$id
+        let currentUser = 'user:' + account.$id
 
         // team reference
         let team: Team = await this.createTeam(data?.name)
         data.teamId = team.$id
+        let currentTeam = 'team:' + team.$id
 
         // create institute institute
-        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [current, '*'], [current], '', '', '') as Institute
+        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [currentUser, currentTeam, '*'], [currentUser, currentTeam], '', '', '') as Institute
         console.log('Created Institute', institute)
 
         // save team in user prefs
@@ -379,6 +428,35 @@ export class AppwriteService {
           '', // search
           0, // first
           0 // last
+        );
+        console.log('End list institute', res)
+
+        let institutes: Institute[] = (res as any)['documents'] as Institute[]
+        resolve(institutes)
+      } catch (e) {
+        this.handleError(e)
+        reject()
+      }
+
+    })
+  }
+
+  filterInstitutes(filters: string[] = [], offset: number = 0, limit: number = 0, first: number = 0, last: number = 0): Promise<Institute[]> {
+    return new Promise<Institute[]>(async (resolve, reject) => {
+      try {
+        console.log('Start list institute')
+        // 	    listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
+        let res = await this.appwrite.database.listDocuments(
+          environment.instituteCollectionId, // collectionId
+          filters, // filters
+          offset, // offset
+          limit, // limit
+          'name', // orderField
+          '', // orderType
+          '', // orderCast
+          '', // search
+          first, // first
+          last // last
         );
         console.log('End list institute', res)
 

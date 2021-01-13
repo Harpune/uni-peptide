@@ -8,6 +8,7 @@ import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { environment } from 'src/environments/environment'
 import { Router } from '@angular/router';
 import { NestedTreeControl } from '@angular/cdk/tree';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-home',
@@ -19,11 +20,12 @@ export class HomeComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
 
-  displayedColumns: string[] = ['teamId', 'name', 'organisation', 'address']
+  displayedInstituteColumns: string[] = ['teamId', 'name', 'organisation', 'address']
+  displayedUserColumns: string[] = ['name', 'email']
 
-  dataSource!: MatTableDataSource<Institute>
+  instituteData!: MatTableDataSource<Institute>
+
   breakpoint!: number
-
   treeControl!: any
 
   constructor(private appwriteService: AppwriteService,
@@ -44,12 +46,20 @@ export class HomeComponent implements OnInit {
   }
 
   private async getInstitutesOfUser() {
-    this.appwriteService.listInstitutesOfCurrent()
-      .then((institutes: Institute[]) => {
-        this.dataSource = new MatTableDataSource(institutes)
-        this.dataSource.paginator = this.paginator
-        this.dataSource.sort = this.sort
-      })
+    try {
+      let teams = await this.appwriteService.listTeams()
+      console.log('teams', teams)
+      let teamIdsFilter: string[] = teams
+        .map(team => 'teamId=' + team.$id)
+      console.log('teamIdsFilter', teamIdsFilter)
+      let institutes: Institute[] = await this.appwriteService.filterInstitutes(teamIdsFilter)
+      console.log('institutes', institutes)
+      this.instituteData = new MatTableDataSource(institutes)
+      this.instituteData.paginator = this.paginator
+      this.instituteData.sort = this.sort
+
+    } catch (e) {
+    }
   }
 
   setBreakpoints(width: number) {

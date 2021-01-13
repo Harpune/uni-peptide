@@ -44,6 +44,9 @@ import { VerificationCallbackComponent } from './component/callback-verification
 import { InstituteDetailsComponent } from './component/institute-details/institute-details.component';
 import { CreateProjectComponent } from './component/project-create/project-create.component';
 import { ProjectComponent } from './component/project/project.component';
+import { CustomStepperComponent } from './component/custom-stepper/custom-stepper.component';
+import { CreateInstituteMemberComponent } from './component/institute-create-member/institute-create-member.component';
+import { MemberInvitationCallbackComponent } from './component/callback-member-invitation/callback-member-invitation.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +63,10 @@ import { ProjectComponent } from './component/project/project.component';
     VerificationCallbackComponent,
     InstituteDetailsComponent,
     CreateProjectComponent,
-    ProjectComponent
+    ProjectComponent,
+    CustomStepperComponent,
+    CreateInstituteMemberComponent,
+    MemberInvitationCallbackComponent
   ],
   imports: [
     CommonModule,
