@@ -6,6 +6,8 @@ import { Session } from 'src/app/models/session';
 import { Account, UserPreference } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Membership, Team } from 'src/app/models/team';
+import { AppwriteError } from 'src/app/models/error';
+import { Recovery } from 'src/app/models/recovery';
 
 @Injectable({
   providedIn: 'root'
@@ -91,13 +93,13 @@ export class AppwriteService {
     })
   }
 
-  createRecovery(email: string): Promise<any> {
-    return new Promise<Account>(async (resolve, reject) => {
+  createRecovery(email: string): Promise<Recovery> {
+    return new Promise<Recovery>(async (resolve, reject) => {
       try {
         console.log('Start create recovery')
         let res = await this.appwrite.account.createRecovery(email, environment.url + '/recovery')
         console.log('End create recovery', res)
-        resolve(res as any)
+        resolve(res as Recovery)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -387,7 +389,7 @@ export class AppwriteService {
         let currentTeam = 'team:' + team.$id
 
         // create institute institute
-        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [currentUser, currentTeam, '*'], [currentUser, currentTeam], '', '', '') as Institute
+        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [currentUser, currentTeam], [currentUser, currentTeam], '', '', '') as Institute
         console.log('Created Institute', institute)
 
         // save team in user prefs
@@ -416,48 +418,7 @@ export class AppwriteService {
     return new Promise<Institute[]>(async (resolve, reject) => {
       try {
         console.log('Start list institute')
-        // 	    listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
-        let res = await this.appwrite.database.listDocuments(
-          environment.instituteCollectionId, // collectionId
-          [], // filters
-          0, // offset
-          50, // limit
-          'name', // orderField
-          '', // orderType
-          '', // orderCast
-          '', // search
-          0, // first
-          0 // last
-        );
-        console.log('End list institute', res)
-
-        let institutes: Institute[] = (res as any)['documents'] as Institute[]
-        resolve(institutes)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-
-    })
-  }
-
-  filterInstitutes(filters: string[] = [], offset: number = 0, limit: number = 0, first: number = 0, last: number = 0): Promise<Institute[]> {
-    return new Promise<Institute[]>(async (resolve, reject) => {
-      try {
-        console.log('Start list institute')
-        // 	    listDocuments(collectionId: string, filters: string[], offset: number, limit: number, orderField: string, orderType: string, orderCast: string, search: string, first: number, last: number): Promise<object>;
-        let res = await this.appwrite.database.listDocuments(
-          environment.instituteCollectionId, // collectionId
-          filters, // filters
-          offset, // offset
-          limit, // limit
-          'name', // orderField
-          '', // orderType
-          '', // orderCast
-          '', // search
-          first, // first
-          last // last
-        );
+        let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId);
         console.log('End list institute', res)
 
         let institutes: Institute[] = (res as any)['documents'] as Institute[]
@@ -630,20 +591,19 @@ export class AppwriteService {
     })
   }
 
-  private handleError(error: any): any {
+  private handleError(error: AppwriteError): any {
+    console.log('Error', error)
     if (!error) {
       console.log('Could not handle error!')
       return;
     }
-
-    console.log(error)
-    switch (error.message) {
-      case 'Unauthorized':
+    switch (error.code) {
+      case 401:
         break;
-      case 'Not Found':
+      case 404:
 
         break;
-      case 'Conflict':
+      case 409:
         this.snackBar.open('Es wurde bereits ein Account mit dieser E-Mail Adresse erstellt', 'Ok', { duration: 2000 })
         break;
       default:

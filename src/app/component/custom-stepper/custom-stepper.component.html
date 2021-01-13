@@ -1,0 +1,4 @@
+<button class="nav-button" cdkStepperPrevious></button>
+<button class="step" *ngFor="let step of steps; let i = index;" [ngClass]="{'active': selectedIndex === i}"
+  (click)="onClick(i)"></button>
+<button class="nav-button" cdkStepperNext>></button>

@@ -1,0 +1,19 @@
+<mat-dialog-content>
+  <h3>Neues Mitglied hinzufügen</h3>
+  <form [formGroup]="membershipForm" id="membership-form" (submit)="submit()">
+    <mat-form-field class="full-width">
+      <mat-label>E-Mail</mat-label>
+      <input matInput #email maxlength="45" formControlName="email" type="email" required>
+      <mat-hint align="end">{{email.value.length}} / 45</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput #name maxlength="45" formControlName="name" type="text">
+      <mat-hint align="end">{{name.value.length}} / 45</mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button form="membership-form" type="submit">Senden</button>
+</mat-dialog-actions>

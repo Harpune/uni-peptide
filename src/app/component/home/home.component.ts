@@ -47,17 +47,10 @@ export class HomeComponent implements OnInit {
 
   private async getInstitutesOfUser() {
     try {
-      let teams = await this.appwriteService.listTeams()
-      console.log('teams', teams)
-      let teamIdsFilter: string[] = teams
-        .map(team => 'teamId=' + team.$id)
-      console.log('teamIdsFilter', teamIdsFilter)
-      let institutes: Institute[] = await this.appwriteService.filterInstitutes(teamIdsFilter)
-      console.log('institutes', institutes)
+      let institutes: Institute[] = await this.appwriteService.listInstitutes()
       this.instituteData = new MatTableDataSource(institutes)
       this.instituteData.paginator = this.paginator
       this.instituteData.sort = this.sort
-
     } catch (e) {
     }
   }

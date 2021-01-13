@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^11.0.4",
     "@angular/router": "^11.0.4",
     "@types/d3": "^6.2.0",
-    "appwrite": "^1.1.0",
+    "appwrite": "^1.2.0",
     "d3": "^6.3.1",
     "ngx-avatar": "^4.0.0",
     "ngx-device-detector": "^2.0.4",

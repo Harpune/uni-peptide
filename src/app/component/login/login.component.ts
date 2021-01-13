@@ -11,7 +11,8 @@ import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
+  account!: Account
+  loginForm!: FormGroup
   sendingEmail: boolean = false
 
   constructor(private formBuilder: FormBuilder,
@@ -25,6 +26,15 @@ export class LoginComponent implements OnInit {
       email: [null, [Validators.required, Validators.email]],
       password: [null, [Validators.required]]
     });
+    this.getAccount();
+  }
+
+  async getAccount() {
+    try {
+      this.account = await this.appwriteService.getAccount();
+    } catch (e) {
+      console.log('Not logged in', e)
+    }
   }
 
   async login() {

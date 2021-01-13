@@ -1,0 +1,8 @@
+<div class="center" *ngIf="!loading; else loadingDiv">
+  <h1>{{ account ? "Willkommen!": "Leider ist etwas schief gelaufen..." }}</h1>
+  <p><a [routerLink]="account ? '/home' : '/login'">{{account ? "Go Home" : "Log me in"}}</a></p>
+</div>
+
+<ng-template #loadingDiv>
+  <mat-spinner class="center"></mat-spinner>
+</ng-template>
