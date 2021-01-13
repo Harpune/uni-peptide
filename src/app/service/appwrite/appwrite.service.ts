@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import * as Appwrite from "appwrite";
 import { Institute, Project } from 'src/app/models/institute';
 import { Session } from 'src/app/models/session';
-import { Account, UserPreference } from 'src/app/models/account';
+import { Account, AccountPreference as AccountPreference } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Membership, Team } from 'src/app/models/team';
 import { AppwriteError } from 'src/app/models/error';
@@ -163,13 +163,13 @@ export class AppwriteService {
     })
   }
 
-  getAccountPrefs(): Promise<UserPreference> {
-    return new Promise<UserPreference>(async (resolve, reject) => {
+  getAccountPrefs(): Promise<AccountPreference> {
+    return new Promise<AccountPreference>(async (resolve, reject) => {
       try {
         console.log('Start get account preferences')
         let res = await this.appwrite.account.getPrefs()
         console.log('End get account preferences', res)
-        resolve(res as UserPreference)
+        resolve(res as AccountPreference)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -177,13 +177,13 @@ export class AppwriteService {
     })
   }
 
-  updateAccountPrefs(prefs: object): Promise<UserPreference> {
-    return new Promise<UserPreference>(async (resolve, reject) => {
+  updateAccountPrefs(prefs: object): Promise<AccountPreference> {
+    return new Promise<AccountPreference>(async (resolve, reject) => {
       try {
         console.log('Start update account preferences')
         let res = await this.appwrite.account.updatePrefs(prefs)
         console.log('End update account preferences', res)
-        resolve(res as UserPreference)
+        resolve(res as AccountPreference)
       } catch (e) {
         this.handleError(e)
         reject()
@@ -314,6 +314,20 @@ export class AppwriteService {
     })
   }
 
+  deleteTeam(id: string): Promise<any> {
+    return new Promise<Team>(async (resolve, reject) => {
+      try {
+        console.log('Delete team', id)
+        let res = await this.appwrite.teams.delete(id) as Team
+        resolve(res)
+      } catch (e) {
+        this.handleError(e)
+        //TODO: must be reject but runs in 500-Error reject()
+        reject()
+      }
+    })
+  }
+
   getTeamMemberships(teamId: string): Promise<Membership[]> {
     return new Promise<Membership[]>(async (resolve, reject) => {
       try {
@@ -343,7 +357,6 @@ export class AppwriteService {
       }
     })
   }
-  // 	    updateMembershipStatus(teamId: string, inviteId: string, userId: string, secret: string): Promise<object>;
 
   updateMembershipStatus(teamId: string, inviteId: string, userId: string, secret: string): Promise<Membership> {
     return new Promise<Membership>(async (resolve, reject) => {
@@ -360,16 +373,17 @@ export class AppwriteService {
     })
   }
 
-  deleteTeam(id: string): Promise<any> {
-    return new Promise<Team>(async (resolve, reject) => {
+  deleteMembershipStatus(teamId: string, inviteId: string): Promise<Membership> {
+    return new Promise<Membership>(async (resolve, reject) => {
       try {
-        console.log('Delete team', id)
-        let res = await this.appwrite.teams.delete(id) as Team
-        resolve(res)
+        console.log('Start delete membership', teamId, inviteId,)
+        let res = await this.appwrite.teams.deleteMembership(teamId, inviteId)
+        console.log('End delete membership', res)
+
+        resolve(res as Membership)
       } catch (e) {
         this.handleError(e)
-        //TODO: must be reject but runs in 500-Error reject()
-        reject()
+        reject(e)
       }
     })
   }
@@ -393,7 +407,7 @@ export class AppwriteService {
         console.log('Created Institute', institute)
 
         // save team in user prefs
-        let prefs: UserPreference = await this.getAccountPrefs()
+        let prefs: AccountPreference = await this.getAccountPrefs()
         let institutes = this.addTeamId(prefs['institutes'], institute.$id)
         this.updateAccountPrefs({ institutes: institutes })
 
@@ -461,7 +475,7 @@ export class AppwriteService {
         console.log('Start add institute to user', id)
 
         // save team in user prefs
-        let prefs: UserPreference = await this.getAccountPrefs()
+        let prefs: AccountPreference = await this.getAccountPrefs()
         console.log('prefs', prefs['institutes'])
         let institutes = this.addTeamId(prefs['institutes'], id)
         console.log('institutes', institutes)

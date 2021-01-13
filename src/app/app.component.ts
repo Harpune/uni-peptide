@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     {
       name: 'Institute',
       route: '/institute',
-      icon: 'folder'
+      icon: 'bug_report'
     },
     {
       name: 'Teams',

@@ -1,5 +1,3 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Institute, Project } from 'src/app/models/institute';
 import { Membership } from 'src/app/models/team';
-import { User } from 'src/app/models/user';
+import { Account, AccountPreference } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { CreateInstituteMemberComponent } from '../institute-create-member/institute-create-member.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
@@ -33,9 +31,11 @@ export class InstituteDetailsComponent implements OnInit {
 
   id!: string
   institute!: Institute
+  isOwner!: boolean
+  account!: Account
 
   displayedProjectColumns: string[] = ['name', 'description', 'date']
-  displayedUserColumns: string[] = ['name', 'email', 'joined']
+  displayedMemberColumns: string[] = ['name', 'email', 'joined']
 
   projectData!: MatTableDataSource<Project>
   membershipData!: MatTableDataSource<Membership>
@@ -63,31 +63,31 @@ export class InstituteDetailsComponent implements OnInit {
   async getData() {
     await this.getProject()
     await this.getMembers()
+    await this.getAccount()
   }
 
   async getProject() {
     try {
-      let institute = await this.appwriteService.getInstitute(this.id)
-      this.institute = institute
+      this.institute = await this.appwriteService.getInstitute(this.id)
 
-      let projects = institute.projects
+      let projects = this.institute.projects
 
       this.projectData = new MatTableDataSource()
 
       if (!projects) projects = []
 
       this.projectData.data = projects
+      console.log('paginator', this.projectPaginator)
       this.projectData.paginator = this.projectPaginator
       this.projectData.sort = this.projectSort
     } catch (e) {
-      console.log('getData', e)
+      console.log('getProject', e)
     }
   }
 
   async getMembers() {
     try {
       let memberships: Membership[] = await this.appwriteService.getTeamMemberships(this.institute.teamId)
-      console.log('asdasd', memberships)
       this.membershipData = new MatTableDataSource();
 
       if (!memberships) memberships = []
@@ -97,6 +97,23 @@ export class InstituteDetailsComponent implements OnInit {
       this.membershipData.sort = this.membershipSort
     } catch (e) {
       console.log('getMembers', e)
+    }
+  }
+
+  async getAccount() {
+    try {
+      this.account = await this.appwriteService.getAccount()
+      console.log('Account', this.account)
+
+      this.isOwner = this.account.roles
+        .filter(role => role.includes(this.institute.teamId))
+        .some(role => role.includes('owner'))
+
+      if (this.isOwner && !this.displayedMemberColumns.includes('owner')) {
+        this.displayedMemberColumns.push('owner')
+      }
+    } catch (e) {
+      console.log('getAccount', e)
     }
   }
 
@@ -146,6 +163,25 @@ export class InstituteDetailsComponent implements OnInit {
       case 'project':
         this.openProjectDialog()
         break;
+    }
+  }
+
+  deleteInstitute() {
+    if (confirm('Wollen wirklich das Institut löschen? Das kann nicht rückgängig gemacht werden.')) {
+
+    }
+  }
+
+  async leaveInstitute() {
+    if (confirm('Wollen wirklich das Institut verlassen?')) {
+      try {
+        let accountPrefs: AccountPreference = await this.appwriteService.getAccountPrefs()
+        if (accountPrefs['inviteId']) {
+          this.appwriteService.deleteMembershipStatus(this.institute.teamId, accountPrefs['inviteId'])
+        }
+
+      } catch (e) {
+      }
     }
   }
 }

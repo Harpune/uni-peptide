@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { Account, UserPreference } from 'src/app/models/account';
+import { Account, AccountPreference } from 'src/app/models/account';
 import { User } from 'src/app/models/user';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { environment } from 'src/environments/environment';

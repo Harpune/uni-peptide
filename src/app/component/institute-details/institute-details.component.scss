@@ -1,8 +1,15 @@
-.form-card {
+.flex-item {
+  margin-right: 32px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+}
+
+mat-list-item {
   cursor: pointer;
-  max-width: 512px;
-  margin: 0 auto;
-  margin-top: 32px;
+}
+
+#projectTable td {
+  cursor: pointer;
 }
 
 .fab-container {
@@ -45,4 +52,13 @@
     letter-spacing: .1em;
     text-transform: uppercase;
   }
+}
+
+#fab-dismiss {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
 }

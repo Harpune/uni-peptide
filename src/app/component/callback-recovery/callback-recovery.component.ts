@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Account } from 'src/app/models/account'
 
 @Component({
   selector: 'app-callback',
@@ -9,6 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./callback-recovery.component.scss']
 })
 export class RecoveryCallbackComponent implements OnInit {
+  account!: Account
   passwordForm!: FormGroup
 
   userId!: string
@@ -20,6 +22,9 @@ export class RecoveryCallbackComponent implements OnInit {
     private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.appwriteService.getAccount()
+      .then(account => this.account = account)
+
     this.activatedRoute.queryParams.subscribe(params => {
       console.log('params', params)
       let userId = params.userId
@@ -41,14 +46,21 @@ export class RecoveryCallbackComponent implements OnInit {
     });
   }
 
-  save() {
+  async save() {
     if (this.passwordForm.valid) {
       let password = this.passwordForm.get('password')?.value
       let passwordAgain = this.passwordForm.get('passwordAgain')?.value
 
-      this.appwriteService.updateRecovery(this.userId, this.secret, password, passwordAgain)
-        .then(res => this.router.navigate(['/login']))
-        .catch(err => console.log('Could not update recovery'))
+      try {
+        let res = await this.appwriteService.updateRecovery(this.userId, this.secret, password, passwordAgain)
+        if (this.account) {
+          this.router.navigate(['/home'])
+        } else {
+          this.router.navigate(['/login'])
+        }
+      } catch (e) {
+        console.log('Could not update recovery')
+      }
     }
   }
 }
