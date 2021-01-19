@@ -38,18 +38,20 @@
         </mat-nested-tree-node>
       </mat-tree>
     </mat-card-content>
-    <div class="fab-container">
-      <button mat-fab color="warn" aria-label="Neues Projekt erstellen" class="fab-toggler" (click)="toggleMiniFabs()">
-        <mat-icon>add</mat-icon>
-        <!-- <span class="extended-fab-button-label">Projekt</span> -->
-      </button>
-      <div>
-        <button *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" color="secondary"
-          (click)="miniFabClicked(btn)">
-          <mat-icon>{{btn.icon}}</mat-icon>
-          <span class="extended-fab-button-label">{{btn.label}}</span>
-        </button>
-      </div>
-    </div>
-    <div id="fab-dismiss" *ngIf="miniFabsShown" (click)="toggleMiniFabs()">
-    </div>
+  </mat-card>
+</div>
+<div class="fab-container">
+  <button mat-fab color="warn" aria-label="Neues Projekt erstellen" class="fab-toggler" (click)="toggleMiniFabs()">
+    <mat-icon>add</mat-icon>
+    <!-- <span class="extended-fab-button-label">Projekt</span> -->
+  </button>
+  <div>
+    <button *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" color="secondary"
+      (click)="miniFabClicked(btn)">
+      <mat-icon>{{btn.icon}}</mat-icon>
+      <span class="extended-fab-button-label">{{btn.label}}</span>
+    </button>
+  </div>
+</div>
+<div id="fab-dismiss" *ngIf="miniFabsShown" (click)="toggleMiniFabs()">
+</div>
