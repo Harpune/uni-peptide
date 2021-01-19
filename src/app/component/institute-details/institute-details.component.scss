@@ -4,12 +4,19 @@
   margin-bottom: 32px;
 }
 
-mat-list-item {
+.clickable {
   cursor: pointer;
 }
 
-#projectTable td {
-  cursor: pointer;
+.project-tree-invisible {
+  display: none;
+}
+
+.project-tree ul,
+.project-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
 }
 
 .fab-container {

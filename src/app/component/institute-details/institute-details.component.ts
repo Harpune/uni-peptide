@@ -11,8 +11,8 @@ import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { CreateInstituteMemberComponent } from '../institute-create-member/institute-create-member.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
 import { ProjectTreeNode } from 'src/app/models/project-tree-node';
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { MatTreeFlattener } from '@angular/material/tree';
+import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlattener, MatTreeNestedDataSource } from '@angular/material/tree';
 
 export interface MiniFab {
   icon: string;
@@ -41,10 +41,7 @@ export class InstituteDetailsComponent implements OnInit {
   isOwner!: boolean
   account!: Account
 
-  displayedProjectColumns: string[] = ['name', 'description', 'date']
   displayedMemberColumns: string[] = ['name', 'email', 'joined']
-
-  projectData!: MatTableDataSource<Project>
   membershipData!: MatTableDataSource<Membership>
 
   miniFabButtons: MiniFab[] = []
@@ -52,6 +49,9 @@ export class InstituteDetailsComponent implements OnInit {
   fabButtons: MiniFab[] = [{ icon: 'person_add', label: 'Mitglied', id: 'member' },
   { icon: 'lightbulb_outline', label: 'Projekt', id: 'project' }]
 
+  treeControl = new NestedTreeControl<Project>(node => node.subprojects)
+  dataSource = new MatTreeNestedDataSource<Project>()
+  hasChild = (_: number, node: Project) => !!node.subprojects && node.subprojects.length > 0
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -80,19 +80,14 @@ export class InstituteDetailsComponent implements OnInit {
       this.institute = await this.appwriteService.getInstitute(this.id)
 
       let projects = this.institute.projects
-
-      this.projectData = new MatTableDataSource()
-
+      console.log('projects', projects)
       if (!projects) projects = []
-
-      this.projectData.data = projects
-      console.log('paginator', this.projectPaginator)
-      this.projectData.paginator = this.projectPaginator
-      this.projectData.sort = this.projectSort
+      this.dataSource.data = projects
     } catch (e) {
       console.log('getProject', e)
     }
   }
+
 
   async getMembers() {
     try {
