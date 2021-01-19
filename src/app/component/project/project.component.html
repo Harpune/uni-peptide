@@ -46,8 +46,8 @@
     <!-- <span class="extended-fab-button-label">Projekt</span> -->
   </button>
   <div>
-    <button *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" color="secondary"
-      (click)="miniFabClicked(btn)">
+    <button [color]="btn.color" *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button"
+      color="secondary" (click)="miniFabClicked(btn)">
       <mat-icon>{{btn.icon}}</mat-icon>
       <span class="extended-fab-button-label">{{btn.label}}</span>
     </button>

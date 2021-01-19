@@ -25,8 +25,10 @@ export class ProjectComponent implements OnInit {
 
   miniFabButtons: MiniFab[] = []
   miniFabsShown: boolean = false;
-  fabButtons: MiniFab[] = [{ icon: 'lightbulb_outline', label: 'Sub-Projekt', id: 'subproject' },
-  { icon: 'attach_file', label: 'Hochladen', id: 'upload' }]
+  fabButtons: MiniFab[] = [
+    { icon: 'lightbulb_outline', label: 'Sub-Projekt', id: 'subproject' },
+    { icon: 'attach_file', label: 'Hochladen', id: 'upload' },
+    { icon: 'delete', label: 'Löschen', id: 'delete', color: 'warn' }]
 
   treeControl = new NestedTreeControl<Project>(node => node.subprojects)
   dataSource = new MatTreeNestedDataSource<Project>()
@@ -51,6 +53,7 @@ export class ProjectComponent implements OnInit {
     try {
       this.institute = await this.appwriteService.getInstitute(this.instituteId)
       this.project = await this.appwriteService.getProject(this.projectId)
+      console.log('project', this.project)
       this.dataSource.data = this.project.subprojects
     } catch (e) {
       console.log(e)
@@ -71,14 +74,21 @@ export class ProjectComponent implements OnInit {
     this.miniFabsShown = !this.miniFabsShown
   }
 
+  hideMiniFabs() {
+    this.miniFabButtons = []
+    this.miniFabsShown = false
+  }
+
   miniFabClicked(miniFab: MiniFab) {
     switch (miniFab.id) {
       case 'subproject':
         this.openSubProjectDialog()
-        // this.snackBar.open('Comming soon. Stay hyped!', 'Go', { duration: 2000 })
         break;
       case 'upload':
         this.openFilesDialog()
+        break;
+      case 'delete':
+        this.snackBar.open('Comming soon. Stay hyped!', 'Go', { duration: 2000 })
         break;
     }
   }
@@ -94,10 +104,22 @@ export class ProjectComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       console.log('Res Dialog', res)
       this.getData()
-      this.toggleMiniFabs()
+      this.hideMiniFabs()
     })
   }
 
   openFilesDialog() {
+    const dialogRef = this.dialog.open(UploadFilesComponent, {
+      data: {
+        project: this.project,
+        institute: this.institute
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(res => {
+      console.log('Res Dialog', res)
+      this.getData()
+      this.hideMiniFabs()
+    })
   }
 }

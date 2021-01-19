@@ -10,18 +10,14 @@ import { Account } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { CreateInstituteMemberComponent } from '../institute-create-member/institute-create-member.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
-import { ProjectTreeNode } from 'src/app/models/project-tree-node';
-import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeFlattener, MatTreeNestedDataSource } from '@angular/material/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 export interface MiniFab {
   icon: string;
   label: string;
   id: string;
-}
-
-export class DynamicFlatNode {
-  constructor(public item: Project, public level = 1, public expandable = false, public isLoading = false) { }
+  color?: string;
 }
 
 @Component({
@@ -38,6 +34,7 @@ export class InstituteDetailsComponent implements OnInit {
 
   id!: string
   institute!: Institute
+  projects!: Project[]
   isOwner!: boolean
   account!: Account
 
@@ -56,9 +53,7 @@ export class InstituteDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-    private appwriteService: AppwriteService) {
-
-  }
+    private appwriteService: AppwriteService) { }
 
   ngOnInit(): void {
     // get project-id
@@ -79,10 +74,10 @@ export class InstituteDetailsComponent implements OnInit {
     try {
       this.institute = await this.appwriteService.getInstitute(this.id)
 
-      let projects = this.institute.projects
-      console.log('projects', projects)
-      if (!projects) projects = []
-      this.dataSource.data = projects
+      this.projects = this.institute.projects
+      console.log('projects', this.projects)
+      if (!this.projects) this.projects = []
+      this.dataSource.data = this.projects
     } catch (e) {
       console.log('getProject', e)
     }
@@ -133,7 +128,7 @@ export class InstituteDetailsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       console.log('Res Dialog', res)
       this.getData()
-      this.toggleMiniFabs()
+      this.hideMiniFabs()
     })
   }
 
@@ -145,7 +140,7 @@ export class InstituteDetailsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       console.log('Res Dialog', res)
       this.getData()
-      this.toggleMiniFabs()
+      this.hideMiniFabs()
     })
 
   }
@@ -157,6 +152,11 @@ export class InstituteDetailsComponent implements OnInit {
       this.miniFabButtons = this.fabButtons
     }
     this.miniFabsShown = !this.miniFabsShown
+  }
+
+  hideMiniFabs() {
+    this.miniFabButtons = []
+    this.miniFabsShown = false
   }
 
   miniFabClicked(miniFab: MiniFab) {

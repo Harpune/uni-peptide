@@ -6,14 +6,14 @@
 
 <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="16px" fxLayoutAlign="space-around">
   <div class="mat-typography flex-item">
-    <mat-card class="mat-elevation-z8 form-card">
+    <mat-card class="mat-elevation-z8" style="min-width: 256px;">
       <mat-card-header>
         <mat-card-title>Projekte</mat-card-title>
         <mat-card-subtitle>Alle Projekte des Instituts</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-
-        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="project-tree">
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="project-tree"
+          *ngIf="projects && projects.length != 0; else createProject">
 
           <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="showProject(node)" class="clickable">
             <li class="mat-tree-node">
@@ -39,6 +39,10 @@
             </li>
           </mat-nested-tree-node>
         </mat-tree>
+        <ng-template #createProject>
+          <button mat-raised-button color="primary" (click)="openProjectDialog()">Projekt erstellen</button>
+        </ng-template>
+
       </mat-card-content>
     </mat-card>
   </div>
@@ -131,7 +135,7 @@
     </button>
   </div>
 </div>
-<div id="fab-dismiss" *ngIf="miniFabsShown" (click)="toggleMiniFabs()">
+<div id="fab-dismiss" *ngIf="miniFabsShown" (click)="hideMiniFabs()">
 </div>
 
 <!-- <div class="fab-bottom-right">
