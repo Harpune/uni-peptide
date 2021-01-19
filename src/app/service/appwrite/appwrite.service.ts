@@ -13,8 +13,7 @@ import { Recovery } from 'src/app/models/recovery';
   providedIn: 'root'
 })
 export class AppwriteService {
-  public appwrite: Appwrite = new Appwrite();
-
+  public appwrite: Appwrite = new Appwrite()
 
   constructor(private snackBar: MatSnackBar) {
     // init appwrite
@@ -569,6 +568,8 @@ export class AppwriteService {
         let account: Account = await this.getAccount()
         let current = 'user:' + account.$id
 
+        console.log('current', current)
+
         // create project
         let res = await this.appwrite.database.createDocument(environment.projectCollectionId, data, [current], [current], '', '', '')
         let project: Project = res as Project
@@ -597,6 +598,20 @@ export class AppwriteService {
         console.log('Start get project', id)
         let res = await this.appwrite.database.getDocument(environment.projectCollectionId, id)
         console.log('End get Project', res)
+        resolve(res as Project)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  updateProject(project: Project): Promise<Project> {
+    return new Promise<Project>(async (resolve, reject) => {
+      try {
+        console.log('Start update project', project)
+        let res = await this.appwrite.database.updateDocument(environment.projectCollectionId, project.$id, project, project.$permissions.read, project.$permissions.write)
+        console.log('End update Project', res)
         resolve(res as Project)
       } catch (e) {
         this.handleError(e)

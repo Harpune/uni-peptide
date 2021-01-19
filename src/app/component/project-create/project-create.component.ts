@@ -40,9 +40,9 @@ export class CreateProjectComponent implements OnInit {
     let now: Date = new Date()
     project.created = now.toISOString()
     project.updated = now.toISOString()
-
+    project.subprojects = []
+    project.$permissions = this.institute.$permissions
     project.$collection = environment.projectCollectionId
-    project.$permissions = { read: ['*'], write: ['*'] }
 
     if (!this.institute.projects) {
       this.institute.projects = []

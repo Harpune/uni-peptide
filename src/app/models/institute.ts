@@ -20,8 +20,9 @@ export interface Project {
     description: string;
     date: string;
     created: string;
-    updated:string;
-    peptideLibraries: PeptideLibrary[]
+    updated: string;
+    subprojects: Project[];
+    peptideLibraries: PeptideLibrary[];
 }
 
 export interface PeptideLibrary {

@@ -1,5 +1,50 @@
-@import "../../../styles.scss";
+.fab-container {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
 
-.mat-row:hover {
-  background-color: mat-color($default-app-primary-tint);
+  >div {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin-bottom: 5px;
+
+    button {
+      margin-bottom: 17px;
+    }
+  }
+}
+
+.fab-toggler {
+  float: right;
+  z-index: 100;
+}
+
+.extended-fab-button {
+  width: unset;
+  padding: 0 26px;
+  border-radius: 29px;
+
+  .mat-icon {
+    margin-right: 10px;
+  }
+
+  .extended-fab-button-label {
+    font-weight: 300;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+}
+
+#fab-dismiss {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
 }

@@ -2,6 +2,7 @@
   <h1>{{institute ? institute.name : "Name"}}</h1>
   <h4>{{institute ? institute.organisation : "Organisation"}}</h4>
 </section>
+
 <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="16px" fxLayoutAlign="space-around">
   <div class="mat-typography flex-item">
     <mat-card class="mat-elevation-z8 form-card">
@@ -29,7 +30,8 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedProjectColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedProjectColumns;" (click)="showProject(row)"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedProjectColumns;" (click)="showProject(row)"
+            (contextmenu)="onRightClick()"></tr>
 
           <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" [attr.colspan]="displayedProjectColumns.length" (click)="openProjectDialog()">Es sind
@@ -124,7 +126,7 @@
     <!-- <span class="extended-fab-button-label">Projekt</span> -->
   </button>
   <div>
-    <button *ngFor="let btn of buttons" mat-mini-fab class="extended-fab-button" color="secondary"
+    <button *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" color="secondary"
       (click)="miniFabClicked(btn)">
       <mat-icon>{{btn.icon}}</mat-icon>
       <span class="extended-fab-button-label">{{btn.label}}</span>

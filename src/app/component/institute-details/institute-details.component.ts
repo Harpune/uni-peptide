@@ -10,11 +10,18 @@ import { Account } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { CreateInstituteMemberComponent } from '../institute-create-member/institute-create-member.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
+import { ProjectTreeNode } from 'src/app/models/project-tree-node';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlattener } from '@angular/material/tree';
 
 export interface MiniFab {
   icon: string;
   label: string;
   id: string;
+}
+
+export class DynamicFlatNode {
+  constructor(public item: Project, public level = 1, public expandable = false, public isLoading = false) { }
 }
 
 @Component({
@@ -40,16 +47,18 @@ export class InstituteDetailsComponent implements OnInit {
   projectData!: MatTableDataSource<Project>
   membershipData!: MatTableDataSource<Membership>
 
-  buttons: MiniFab[] = []
+  miniFabButtons: MiniFab[] = []
   miniFabsShown: boolean = false;
   fabButtons: MiniFab[] = [{ icon: 'person_add', label: 'Mitglied', id: 'member' },
-  { icon: 'lightbulb_outline', label: 'Projekt', id: 'project' }];
+  { icon: 'lightbulb_outline', label: 'Projekt', id: 'project' }]
 
-  // TODO: Darf nur von Team-Mitgliedern gesehen werden -> Authguard
+
   constructor(private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-    private appwriteService: AppwriteService) { }
+    private appwriteService: AppwriteService) {
+
+  }
 
   ngOnInit(): void {
     // get project-id
@@ -148,9 +157,9 @@ export class InstituteDetailsComponent implements OnInit {
 
   toggleMiniFabs() {
     if (this.miniFabsShown) {
-      this.buttons = []
+      this.miniFabButtons = []
     } else {
-      this.buttons = this.fabButtons
+      this.miniFabButtons = this.fabButtons
     }
     this.miniFabsShown = !this.miniFabsShown
   }
@@ -164,6 +173,11 @@ export class InstituteDetailsComponent implements OnInit {
         this.openProjectDialog()
         break;
     }
+  }
+
+  onRightClick() {
+    console.log('right')
+    return false
   }
 
   deleteInstitute() {

@@ -2,16 +2,20 @@
   <section class="mat-typography">
     <h1>{{project.name}}</h1>
     <h4>{{project.description}}</h4>
-
-    <ngx-dropzone #drop (change)="onSelect($event)">
-      <ngx-dropzone-label>Drop & Drop</ngx-dropzone-label>
-      <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-      </ngx-dropzone-preview>
-    </ngx-dropzone>
-    <div style="width: 100%;" align="end">
-      <button style="margin: 16px;" mat-raised-button (click)="uploadFiles()">Upload</button>
-    </div>
-
   </section>
-</div>
+
+  <div class="fab-container">
+    <button mat-fab color="warn" aria-label="Neues Projekt erstellen" class="fab-toggler" (click)="toggleMiniFabs()">
+      <mat-icon>add</mat-icon>
+      <!-- <span class="extended-fab-button-label">Projekt</span> -->
+    </button>
+    <div>
+      <button *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" color="secondary"
+        (click)="miniFabClicked(btn)">
+        <mat-icon>{{btn.icon}}</mat-icon>
+        <span class="extended-fab-button-label">{{btn.label}}</span>
+      </button>
+    </div>
+  </div>
+  <div id="fab-dismiss" *ngIf="miniFabsShown" (click)="toggleMiniFabs()">
+  </div>

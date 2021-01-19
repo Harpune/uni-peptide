@@ -49,6 +49,8 @@ import { ProjectComponent } from './component/project/project.component';
 import { CustomStepperComponent } from './component/custom-stepper/custom-stepper.component';
 import { CreateInstituteMemberComponent } from './component/institute-create-member/institute-create-member.component';
 import { MemberInvitationCallbackComponent } from './component/callback-member-invitation/callback-member-invitation.component';
+import { SubProjectCreateComponent } from './component/project-sub-create/project-sub-create.component';
+import { UploadFilesComponent } from './component/upload-files/upload-files.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +70,9 @@ import { MemberInvitationCallbackComponent } from './component/callback-member-i
     ProjectComponent,
     CustomStepperComponent,
     CreateInstituteMemberComponent,
-    MemberInvitationCallbackComponent
+    MemberInvitationCallbackComponent,
+    SubProjectCreateComponent,
+    UploadFilesComponent
   ],
   imports: [
     CommonModule,
