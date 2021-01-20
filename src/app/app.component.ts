@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AppwriteService } from './service/appwrite/appwrite.service';
+import { AppwriteService } from './services/appwrite/appwrite.service';
 import { environment } from 'src/environments/environment'
 import { Account } from './models/account';
-import { Event, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { Event, NavigationEnd, Router } from '@angular/router';
 import { Session } from './models/session';
-import { StorageService } from './service/storage/storage.service';
 import { HostListener } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 
@@ -29,26 +28,16 @@ export class AppComponent implements OnInit {
       name: 'User',
       route: '/user',
       icon: 'face'
-    },
-    {
-      name: 'Institute',
-      route: '/institute',
-      icon: 'bug_report'
-    },
-    {
-      name: 'Teams',
-      route: '/team',
-      icon: 'bug_report'
     }
   ]
 
   account!: Account | null
 
   constructor(private appwriteService: AppwriteService,
-    private storageService: StorageService,
     private router: Router) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
+        console.log('Navigated to', event.urlAfterRedirects)
         this.getAccount()
       }
     })
@@ -59,26 +48,14 @@ export class AppComponent implements OnInit {
   }
 
   async getAccount() {
-    // let isLoggedIn = await this.appwriteService.isLoggedIn()
     this.appwriteService.getAccount()
-      .then((user: Account) => {
-        console.log("Logged in as", user)
-        this.account = user
-        this.storageService.setCurrentUser(user)
-        if (!user.emailVerification) {
-          // this.snackBar.open("Dein Account wurde noch nicht verifiziert", "Verifizieren").onAction().subscribe()
-        }
-      })
-      .catch(error => {
-        this.account = null
-        console.log(error)
-      });
+      .then((account: Account) => this.account = account)
+      .catch(error => this.account = null)
   }
 
   logout(): void {
     this.appwriteService.getCurrentSession()
       .then((session: Session) => this.appwriteService.deleteSession(session.$id))
-      .then((res) => this.storageService.removeCurrentUser())
       .finally(() => this.router.navigate(['/login']))
   }
 
