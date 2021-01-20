@@ -10,7 +10,7 @@
   </mat-toolbar>
 
   <mat-sidenav-container style="height: 100%;">
-    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" style="width: 250px;" *ngIf="account">
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" style="width: 156px;" *ngIf="account">
       <mat-nav-list>
         <mat-list-item *ngFor="let item of navItems" [routerLink]="item.route" (click)="isMobile && sidenav.toggle()">
           <mat-icon mat-list-icon>{{ item.icon }}</mat-icon>

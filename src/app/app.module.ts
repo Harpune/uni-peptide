@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsiveModule } from 'ngx-responsive'
 import { AvatarModule } from 'ngx-avatar';
@@ -31,37 +32,30 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 
-import { InstituteComponent } from './component/institute/institute.component';
-import { HomeComponent } from './component/home/home.component';
-import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
-import { LoginComponent } from './component/login/login.component';
-import { RegisterComponent } from './component/register/register.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpErrorInterceptor } from './interceptor/http-error/http-error.interceptor';
-import { UserComponent } from './component/user/user.component';
-import { TeamComponent } from './component/teams/teams.component';
-import { CreateInstituteComponent } from './component/institute-create/institute-create.component';
-import { RecoveryCallbackComponent } from './component/callback-recovery/callback-recovery.component';
-import { VerificationCallbackComponent } from './component/callback-verification/callback-verification.component';
-import { InstituteDetailsComponent } from './component/institute-details/institute-details.component';
-import { CreateProjectComponent } from './component/project-create/project-create.component';
-import { ProjectComponent } from './component/project/project.component';
-import { CustomStepperComponent } from './component/custom-stepper/custom-stepper.component';
-import { CreateInstituteMemberComponent } from './component/institute-create-member/institute-create-member.component';
-import { MemberInvitationCallbackComponent } from './component/callback-member-invitation/callback-member-invitation.component';
-import { SubProjectCreateComponent } from './component/project-sub-create/project-sub-create.component';
-import { UploadFilesComponent } from './component/upload-files/upload-files.component';
+import { HomeComponent } from './components/home/home.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { UserComponent } from './components/user/user.component';
+import { CreateInstituteComponent } from './components/institute-create/institute-create.component';
+import { RecoveryCallbackComponent } from './components/callback-recovery/callback-recovery.component';
+import { VerificationCallbackComponent } from './components/callback-verification/callback-verification.component';
+import { InstituteDetailsComponent } from './components/institute-details/institute-details.component';
+import { CreateProjectComponent } from './components/project-create/project-create.component';
+import { ProjectComponent } from './components/project/project.component';
+import { CustomStepperComponent } from './components/custom-stepper/custom-stepper.component';
+import { CreateInstituteMemberComponent } from './components/institute-create-member/institute-create-member.component';
+import { MemberInvitationCallbackComponent } from './components/callback-member-invitation/callback-member-invitation.component';
+import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InstituteComponent,
     HomeComponent,
     PageNotFoundComponent,
     LoginComponent,
     RegisterComponent,
     UserComponent,
-    TeamComponent,
     CreateInstituteComponent,
     RecoveryCallbackComponent,
     VerificationCallbackComponent,
@@ -71,7 +65,6 @@ import { UploadFilesComponent } from './component/upload-files/upload-files.comp
     CustomStepperComponent,
     CreateInstituteMemberComponent,
     MemberInvitationCallbackComponent,
-    SubProjectCreateComponent,
     UploadFilesComponent
   ],
   imports: [
@@ -80,9 +73,9 @@ import { UploadFilesComponent } from './component/upload-files/upload-files.comp
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     ResponsiveModule.forRoot(),
     AvatarModule,
-    HttpClientModule,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -105,9 +98,7 @@ import { UploadFilesComponent } from './component/upload-files/upload-files.comp
     FlexLayoutModule,
     NgxDropzoneModule
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,89 @@
+<button *ngIf="account && !account.emailVerification" mat-raised-button type="button" (click)="verify()"
+  [disabled]="verifying" style="margin: 32px 32px 0 32px; width: -webkit-calc(100% - 64px);">
+  Verify
+  <!-- <mat-spinner style="margin: 0 auto;" [diameter]="16"></mat-spinner> -->
+</button>
+
+<mat-card *ngIf="account" class="mat-elevation-z8 form-card">
+  <mat-icon matTooltip="Dieser Account ist verifiziert" style="position: absolute; top: 16px; right: 16px;"
+    *ngIf="account.emailVerification">verified</mat-icon>
+  <mat-card-header>
+    <ngx-avatar mat-card-avatar [name]="account.name"></ngx-avatar>
+    <mat-card-title>
+      {{ account.name }}
+    </mat-card-title>
+    <mat-card-subtitle>Registriert seit {{account.registration * 1000 | date:'dd.M.yyyy' }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="accountForm" id="account-form">
+      <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput #name maxlength="45" formControlName="name" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Straße</mat-label>
+        <input matInput #street type="text" maxlength="45" formControlName="street">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Hausnummer</mat-label>
+        <input matInput #streetNumber type="number" maxlength="10" formControlName="streetNumber">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>PLZ</mat-label>
+        <input matInput #zip maxlength="6" type="number" formControlName="zip">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Stadt</mat-label>
+        <input matInput #city maxlength="45" type="text" formControlName="city">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" class="half-width"
+      (click)="toggleAccountEdit()">{{ accountEditable ? 'Rückgängig' : 'Bearbeiten' }}</button>
+    <button mat-raised-button type="submit" form="account-form" *ngIf="accountEditable" class="half-width"
+      (click)="saveAccount()">Speichern</button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card *ngIf="account" class="mat-elevation-z8 form-card">
+  <mat-card-header>
+    <mat-card-title>Anmeldeinformationen</mat-card-title>
+    <mat-card-subtitle>Ändere deine E-Mailaddresse oder dein Passwort</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form *ngIf="account" [formGroup]="authForm" id="auth-form">
+      <mat-form-field class="full-width">
+        <mat-label>E-Mail</mat-label>
+        <input matInput #email type="email" maxlength="45" formControlName="email" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Altes Passwort</mat-label>
+        <input matInput #email type="password" minLength="6" maxlength="32" formControlName="oldPassword" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Neues Passwort</mat-label>
+        <input matInput #email type="password" minLength="6" maxlength="32" formControlName="password">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" class="half-width"
+      (click)="toggleAuthEdit()">{{ authEditable ? 'Rückgängig' : 'Bearbeiten' }}</button>
+    <button mat-raised-button type="submit" form="auth-form" *ngIf="authEditable" class="half-width"
+      (click)="saveAuth()">Speichern</button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card *ngIf="account" class="mat-elevation-z8 form-card" style="margin-bottom: 32px;">
+  <mat-card-header>
+    <mat-card-title>Account löschen</mat-card-title>
+    <mat-card-subtitle>Damit löschen Sie Ihren Account. Das kann nicht rückgängig gemacht werden!</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-actions style="text-align: center;">
+    <button mat-raised-button color="warn" class="half-width" (click)="deleteAccount()">Löschen</button>
+  </mat-card-actions>
+</mat-card>
