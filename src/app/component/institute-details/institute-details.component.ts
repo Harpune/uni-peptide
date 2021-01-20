@@ -12,6 +12,7 @@ import { CreateInstituteMemberComponent } from '../institute-create-member/insti
 import { CreateProjectComponent } from '../project-create/project-create.component';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { speedDialFabAnimations } from 'src/app/animations/fab-rotation.animations';
 
 export interface MiniFab {
   icon: string;
@@ -23,7 +24,8 @@ export interface MiniFab {
 @Component({
   selector: 'app-institute-details',
   templateUrl: './institute-details.component.html',
-  styleUrls: ['./institute-details.component.scss']
+  styleUrls: ['./institute-details.component.scss'],
+  animations: speedDialFabAnimations
 })
 export class InstituteDetailsComponent implements OnInit {
 
@@ -42,7 +44,7 @@ export class InstituteDetailsComponent implements OnInit {
   membershipData!: MatTableDataSource<Membership>
 
   miniFabButtons: MiniFab[] = []
-  miniFabsShown: boolean = false;
+  fabTogglerState: string = 'inactive'
   fabButtons: MiniFab[] = [{ icon: 'person_add', label: 'Mitglied', id: 'member' },
   { icon: 'lightbulb_outline', label: 'Projekt', id: 'project' }]
 
@@ -127,6 +129,8 @@ export class InstituteDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       console.log('Res Dialog', res)
+
+      
       this.getData()
       this.hideMiniFabs()
     })
@@ -146,17 +150,17 @@ export class InstituteDetailsComponent implements OnInit {
   }
 
   toggleMiniFabs() {
-    if (this.miniFabsShown) {
-      this.miniFabButtons = []
-    } else {
-      this.miniFabButtons = this.fabButtons
-    }
-    this.miniFabsShown = !this.miniFabsShown
+    this.miniFabButtons.length ? this.hideMiniFabs() : this.showMiniFabs();
+  }
+
+  showMiniFabs() {
+    this.miniFabButtons = this.fabButtons
+    this.fabTogglerState = 'active'
   }
 
   hideMiniFabs() {
+    this.fabTogglerState = 'inactive'
     this.miniFabButtons = []
-    this.miniFabsShown = false
   }
 
   miniFabClicked(miniFab: MiniFab) {

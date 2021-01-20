@@ -42,10 +42,10 @@
 </div>
 <div class="fab-container">
   <button mat-fab color="warn" aria-label="Neues Projekt erstellen" class="fab-toggler" (click)="toggleMiniFabs()">
-    <mat-icon>add</mat-icon>
+    <mat-icon [@fab-toggler]="{value: fabTogglerState}">add</mat-icon>
     <!-- <span class="extended-fab-button-label">Projekt</span> -->
   </button>
-  <div>
+  <div [@speed-dial-stagger]="miniFabButtons.length">
     <button [color]="btn.color" *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button"
       color="secondary" (click)="miniFabClicked(btn)">
       <mat-icon>{{btn.icon}}</mat-icon>
@@ -53,5 +53,5 @@
     </button>
   </div>
 </div>
-<div id="fab-dismiss" *ngIf="miniFabsShown" (click)="toggleMiniFabs()">
+<div id="fab-dismiss" *ngIf="fabTogglerState==='active'" (click)="hideMiniFabs()">
 </div>

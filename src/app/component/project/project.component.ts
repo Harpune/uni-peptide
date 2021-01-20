@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
+import { speedDialFabAnimations } from 'src/app/animations/fab-rotation.animations';
 import { Institute, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/service/appwrite/appwrite.service';
 import { MiniFab } from '../institute-details/institute-details.component';
@@ -13,7 +14,8 @@ import { UploadFilesComponent } from '../upload-files/upload-files.component';
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss']
+  styleUrls: ['./project.component.scss'],
+  animations: speedDialFabAnimations
 })
 export class ProjectComponent implements OnInit {
   private instituteId!: string
@@ -21,10 +23,9 @@ export class ProjectComponent implements OnInit {
 
   institute!: Institute
   project!: Project
-  subprojects!: Project[]
 
   miniFabButtons: MiniFab[] = []
-  miniFabsShown: boolean = false;
+  fabTogglerState: string = 'inactive';
   fabButtons: MiniFab[] = [
     { icon: 'lightbulb_outline', label: 'Sub-Projekt', id: 'subproject' },
     { icon: 'attach_file', label: 'Hochladen', id: 'upload' },
@@ -66,17 +67,17 @@ export class ProjectComponent implements OnInit {
   }
 
   toggleMiniFabs() {
-    if (this.miniFabsShown) {
-      this.miniFabButtons = []
-    } else {
-      this.miniFabButtons = this.fabButtons
-    }
-    this.miniFabsShown = !this.miniFabsShown
+    this.miniFabButtons.length ? this.hideMiniFabs() : this.showMiniFabs();
+  }
+
+  showMiniFabs() {
+    this.fabTogglerState = 'active'
+    this.miniFabButtons = this.fabButtons
   }
 
   hideMiniFabs() {
+    this.fabTogglerState = 'inactive'
     this.miniFabButtons = []
-    this.miniFabsShown = false
   }
 
   miniFabClicked(miniFab: MiniFab) {
@@ -88,9 +89,25 @@ export class ProjectComponent implements OnInit {
         this.openFilesDialog()
         break;
       case 'delete':
-        this.snackBar.open('Comming soon. Stay hyped!', 'Go', { duration: 2000 })
+        this.deleteProject();
         break;
     }
+  }
+
+  deleteProject() {
+    if (confirm('Wollen sie das Projekt inklusive Sub-Projekte wirklich löschen?')) {
+      this.removeTeams(this.project)
+    }
+  }
+
+  removeTeams(project: Project) {
+    // Remove current reference
+    this.appwriteService.deleteProjectTeams(project)
+      .then(res => console.log('Done: removeTeamsRekursive', project.name))
+
+    // remove child reference
+    project.subprojects?.forEach(project => this.removeTeams(project))
+
   }
 
   openSubProjectDialog() {

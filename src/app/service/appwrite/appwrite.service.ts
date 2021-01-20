@@ -620,6 +620,35 @@ export class AppwriteService {
     })
   }
 
+  // better remove team reference
+  deleteProject(id: string): Promise<Project> {
+    return new Promise<Project>(async (resolve, reject) => {
+      try {
+        console.log('Start delete project', id)
+        let res = await this.appwrite.database.deleteDocument(environment.projectCollectionId, id)
+        console.log('End delete Project', res)
+        resolve(res as Project)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  deleteProjectTeams(project: Project): Promise<Project> {
+    return new Promise<Project>(async (resolve, reject) => {
+      try {
+        console.log('Start delete project (team memberships)', project)
+        let res = await this.appwrite.database.updateDocument(environment.projectCollectionId, project.$id, project, [], [])
+        console.log('End delete Project (team memberships)', res)
+        resolve(res as Project)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
   uploadFile(file: File, ids: string[] = ["*"]): Promise<object> {
     return new Promise<object>(async (resolve, reject) => {
       try {
