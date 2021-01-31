@@ -400,13 +400,9 @@ export class AppwriteService {
         let currentTeam = 'team:' + team.$id
 
         // create institute institute
-        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [currentUser, currentTeam], [currentUser, currentTeam], '', '', '') as Institute
+        let institute: Institute = await this.appwrite.database.createDocument(environment.instituteCollectionId, data, [currentUser, currentTeam], [currentUser, currentTeam]) as Institute
         console.log('Created Institute', institute)
 
-        // save team in user prefs
-        let prefs: AccountPreference = await this.getAccountPrefs()
-        let institutes = this.addTeamId(prefs['institutes'], institute.$id)
-        this.updateAccountPrefs({ institutes: institutes })
 
         resolve(institute)
       } catch (e) {
@@ -414,15 +410,6 @@ export class AppwriteService {
         reject()
       }
     })
-  }
-
-  private addTeamId(together: string, toAdd: string): string {
-    if (together === undefined) {
-      together = '[]'
-    }
-    let json = JSON.parse(together)
-    json.push(toAdd)
-    return JSON.stringify(json)
   }
 
   listInstitutes(): Promise<Institute[]> {
@@ -436,77 +423,7 @@ export class AppwriteService {
         resolve(institutes)
       } catch (e) {
         this.handleError(e)
-        reject()
-      }
-
-    })
-  }
-
-  listInstitutesOfCurrent(): Promise<Institute[]> {
-    return new Promise<Institute[]>(async (resolve, reject) => {
-      try {
-        console.log('Start list institutes of user')
-        // let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
-
-        let account: Account = await this.getAccount()
-        let instituteIds = account.prefs['institutes'] ? JSON.parse(account.prefs['institutes']) : []
-
-        let institutes: Institute[] = []
-        for (let id of instituteIds) {
-          let institute: Institute = await this.getInstitute(id)
-          institutes.push(institute)
-        }
-
-        resolve(institutes)
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-
-    })
-  }
-
-  addInstituteToUser(id: string): Promise<Institute[]> {
-    return new Promise<Institute[]>(async (resolve, reject) => {
-      try {
-        console.log('Start add institute to user', id)
-
-        // save team in user prefs
-        let prefs: AccountPreference = await this.getAccountPrefs()
-        console.log('prefs', prefs['institutes'])
-        let institutes = this.addTeamId(prefs['institutes'], id)
-        console.log('institutes', institutes)
-        this.updateAccountPrefs({ institutes: institutes })
-
-        let res = await this.listInstitutesOfCurrent()
-        resolve(res as Institute[])
-      } catch (e) {
-        this.handleError(e)
-        reject()
-      }
-    })
-  }
-
-  removeInstituteFromUser(id: string): Promise<Institute[]> {
-    return new Promise<Institute[]>(async (resolve, reject) => {
-      try {
-        console.log('Start list institutes of user')
-        // let res = await this.appwrite.database.listDocuments(environment.instituteCollectionId, [], 0, 50, 'name', '', '', '', 0, 0)
-
-        let account: Account = await this.getAccount()
-        let instituteIds = account.prefs['institutes'] ? JSON.parse(account.prefs['institutes']) : []
-        console.log('instituteIds', instituteIds)
-
-        let institutes: Institute[] = []
-        for (let id of instituteIds) {
-          let institute: Institute = await this.getInstitute(id)
-          institutes.push(institute)
-        }
-
-        resolve(institutes)
-      } catch (e) {
-        this.handleError(e)
-        reject()
+        reject(e)
       }
 
     })
@@ -637,7 +554,8 @@ export class AppwriteService {
     return new Promise<Project>(async (resolve, reject) => {
       try {
         console.log('Start delete project (team memberships)', project)
-        let res = await this.appwrite.database.updateDocument(environment.projectCollectionId, project.$id, project, [], [])
+        let res = await this.appwrite.database.deleteDocument(environment.projectCollectionId, project.$id)
+        // let res = await this.appwrite.database.updateDocument(environment.projectCollectionId, project.$id, project, [], [])
         console.log('End delete Project (team memberships)', res)
         resolve(res as Project)
       } catch (e) {

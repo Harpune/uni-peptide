@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.setBreakpoints(window.innerWidth)
-    this.getInstitutesOfUser()
+    this.listInstitutes()
   }
 
   public showInstitute(institute: Institute) {
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
     console.log('ASAS', institute)
   }
 
-  private async getInstitutesOfUser() {
+  private async listInstitutes() {
     try {
       let institutes: Institute[] = await this.appwriteService.listInstitutes()
       this.instituteData = new MatTableDataSource(institutes)
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
       }
     })
 
-    dialogRef.afterClosed().subscribe(res => this.getInstitutesOfUser())
+    dialogRef.afterClosed().subscribe(res => this.listInstitutes())
   }
 
   setBreakpoints(width: number) {

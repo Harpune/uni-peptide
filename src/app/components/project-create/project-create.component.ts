@@ -12,7 +12,6 @@ import { environment } from 'src/environments/environment';
 })
 export class CreateProjectComponent implements OnInit {
   projectForm!: FormGroup
-  // TODO: Make maodel available here: Project AND Institute
 
   constructor(private appwriteService: AppwriteService,
     public dialogRef: MatDialogRef<CreateProjectComponent>,
