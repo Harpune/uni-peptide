@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Institute, Project } from 'src/app/models/institute';
-import { Membership } from 'src/app/models/team';
+import { Membership, Team } from 'src/app/models/team';
 import { Account } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { CreateInstituteMemberComponent } from '../institute-create-member/institute-create-member.component';
@@ -13,6 +13,7 @@ import { CreateProjectComponent } from '../project-create/project-create.compone
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { speedDialFabAnimations } from 'src/app/animations/fab-rotation.animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface MiniFab {
   icon: string;
@@ -54,6 +55,7 @@ export class InstituteDetailsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private appwriteService: AppwriteService) { }
 
@@ -185,26 +187,43 @@ export class InstituteDetailsComponent implements OnInit {
     return false
   }
 
-  deleteInstitute() {
+  async deleteInstitute() {
     if (confirm('Wollen wirklich das Institut löschen? Das kann nicht rückgängig gemacht werden.')) {
-
+      try {
+        await this.appwriteService.deleteInstitute(this.institute)
+        this.snackBar.open('Das Institut ' + this.institute.name + ' wurde gelöscht.', 'Ok', { duration: 2000 })
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.router.navigate(["/home"])
+      }
     }
   }
 
-  async leaveInstitute(membership?: Membership) {
-    console.log('Element', membership)
-    if (confirm('Wollen wirklich das Institut verlassen?')) {
+  async leaveInstitute() {
+    if (confirm('Wollen Sie das Institut \'' + this.institute.name + '\' wirklich verlassen?')) {
       try {
-        if (!membership) {
-          membership = this.membershipData.data.find(membership => membership.userId === this.account.$id)
-        }
+        let membership: Membership | undefined = this.membershipData.data.find(membership => membership.userId === this.account.$id)
 
         if (membership) {
           await this.appwriteService.deleteMembershipStatus(this.institute.teamId, membership.$id)
+          this.snackBar.open('Sie habe das Institut ' + this.institute.name + 'erfolgreich verlassen.', 'Ok', { duration: 2000 })
         } else {
           console.log('Could not delete membership', 'No membership found', membership)
         }
 
+      } catch (e) {
+        console.log('Could not delete membership', e)
+      } finally {
+        this.router.navigate(['/home'])
+      }
+    }
+  }
+
+  async removeMembership(membership: Membership) {
+    if (confirm('Soll ' + membership.name + ' wirklich das Insitut verlassen?')) {
+      try {
+        await this.appwriteService.deleteMembershipStatus(this.institute.teamId, membership.$id)
       } catch (e) {
         console.log('Could not delete membership', e)
       } finally {

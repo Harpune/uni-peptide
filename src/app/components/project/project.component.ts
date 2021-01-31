@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
 import { speedDialFabAnimations } from 'src/app/animations/fab-rotation.animations';
+import { Account } from 'src/app/models/account';
 import { Institute, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { MiniFab } from '../institute-details/institute-details.component';
@@ -23,6 +24,8 @@ export class ProjectComponent implements OnInit {
 
   institute!: Institute
   project!: Project
+  account!: Account
+  isOwner: boolean = false
 
   miniFabButtons: MiniFab[] = []
   fabTogglerState: string = 'inactive';
@@ -54,8 +57,14 @@ export class ProjectComponent implements OnInit {
     try {
       this.institute = await this.appwriteService.getInstitute(this.instituteId)
       this.project = await this.appwriteService.getProject(this.projectId)
-      console.log('project', this.project)
       this.dataSource.data = this.project.subprojects
+
+      this.account = await this.appwriteService.getAccount()
+
+      this.isOwner = this.account.roles
+        .filter(role => role.includes(this.institute.teamId))
+        .some(role => role.includes('owner'))
+
     } catch (e) {
       console.log(e)
     }
@@ -97,10 +106,11 @@ export class ProjectComponent implements OnInit {
   deleteProject() {
     if (confirm('Wollen sie das Projekt inklusive Sub-Projekte wirklich löschen?')) {
       this.removeTeams(this.project)
+      this.router.navigate(['../../',], { relativeTo: this.route })
     }
   }
 
-  removeTeams(project: Project) {
+  async removeTeams(project: Project) {
     // Remove current reference
     this.appwriteService.deleteProjectTeams(project)
       .then(res => console.log('Done: removeTeamsRekursive', project.name))

@@ -46,7 +46,7 @@
     <!-- <span class="extended-fab-button-label">Projekt</span> -->
   </button>
   <div [@speed-dial-stagger]="miniFabButtons.length">
-    <button [color]="btn.color" *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button"
+    <button [color]="btn.color" *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" [disabled]="btn.id === 'delete' && !isOwner"
       color="secondary" (click)="miniFabClicked(btn)">
       <mat-icon>{{btn.icon}}</mat-icon>
       <span class="extended-fab-button-label">{{btn.label}}</span>
