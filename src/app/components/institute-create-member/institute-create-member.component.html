@@ -1,5 +1,10 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Neues Mitglied hinzufügen</h1>
+
 <mat-dialog-content>
-  <h3>Neues Mitglied hinzufügen</h3>
   <form [formGroup]="membershipForm" id="membership-form" (submit)="submit()">
     <mat-form-field>
       <mat-label>E-Mail</mat-label>

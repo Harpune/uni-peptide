@@ -1,5 +1,10 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Neues Institut erstellen</h1>
+
 <mat-dialog-content>
-  <h3>Neues Institut erstellen</h3>
   <form [formGroup]="instituteForm" id="institute-form" (submit)="submit()">
     <mat-form-field>
       <mat-label>Name</mat-label>

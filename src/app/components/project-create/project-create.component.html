@@ -1,5 +1,10 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Neues Projekt anlegen</h1>
+
 <mat-dialog-content>
-  <h3>Neues Projekt anlegen</h3>
   <form [formGroup]="projectForm" id="project-form" (submit)="submit()">
     <mat-form-field>
       <mat-label>Name</mat-label>

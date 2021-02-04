@@ -1,6 +1,11 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Dokumente</h1>
+
 <mat-dialog-content>
   <mat-list>
-    <div mat-subheader>Dokumente</div>
     <mat-list-item *ngFor="let file of files">
       <mat-icon mat-list-icon>file_present</mat-icon>
       <div mat-line>{{file.name}}</div>

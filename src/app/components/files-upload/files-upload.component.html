@@ -1,5 +1,10 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Datei hochladen</h1>
+
 <mat-dialog-content>
-  <h3>Datei hochladen</h3>
   <ngx-dropzone #drop (change)="onSelect($event)" style="width: 100%;">
     <ngx-dropzone-label>Drop & Drop</ngx-dropzone-label>
     <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">

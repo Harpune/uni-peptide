@@ -1,5 +1,10 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Dokumente</h1>
+
 <mat-dialog-content>
-  <h3>Neues Peptid anlegen</h3>
   <form [formGroup]="peptideForm" id="peptide-form" (submit)="submit()">
     <mat-form-field>
       <mat-label>Name</mat-label>
@@ -18,11 +23,11 @@
   </form>
 
   <mat-divider style="padding-top: 16px; padding-bottom: 16px;"></mat-divider>
-
-  <ngx-dropzone #drop (change)="onSelect($event)" [multiple]="false" style="width: 100%;">
+  <h4>Dokumente</h4>
+  <ngx-dropzone #drop (change)="onSelect($event)" style="width: 100%;">
     <ngx-dropzone-label>Drop & Drop</ngx-dropzone-label>
-    <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-      <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+    <ngx-dropzone-preview *ngFor="let file of files" [removable]="true" (removed)="onRemove(file)">
+      <ngx-dropzone-label>{{ file.name }}</ngx-dropzone-label>
     </ngx-dropzone-preview>
   </ngx-dropzone>
 

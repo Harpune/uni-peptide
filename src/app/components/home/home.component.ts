@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
 
-  displayedInstituteColumns: string[] = ['teamId', 'name', 'organisation', 'address']
+  displayedInstituteColumns: string[] = ['name', 'organisation', 'address']
   displayedUserColumns: string[] = ['name', 'email']
 
   instituteData!: MatTableDataSource<Institute>

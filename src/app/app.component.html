@@ -5,7 +5,7 @@
       <button *ngIf="account && isMobile" mat-icon-button>
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
       </button>
-      <span>{{title}}</span>
+      <span style="cursor: pointer;" routerLink="/home">{{title}}</span>
       <!-- <img style="max-width:100%; max-width: 100%;" [src]="logo" alt="image"> -->
 
     </mat-toolbar-row>
@@ -16,8 +16,7 @@
       *ngIf="account">
       <div style="padding: 16px;">
         <section class="mat-typography">
-          <h2>{{account?.name}}</h2>
-          <h5>{{account?.email}}</h5>
+          <h4><b>{{account?.name}}</b><br>{{account?.email}}</h4>
         </section>
       </div>
       <mat-divider></mat-divider>
