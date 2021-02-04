@@ -5,9 +5,9 @@ import { Institute, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 
 @Component({
-  selector: 'app-upload-files',
-  templateUrl: './upload-files.component.html',
-  styleUrls: ['./upload-files.component.scss']
+  selector: 'app-files-upload',
+  templateUrl: './files-upload.component.html',
+  styleUrls: ['./files-upload.component.scss']
 })
 export class UploadFilesComponent {
 

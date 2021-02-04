@@ -1,13 +1,14 @@
 import { environment } from 'src/environments/environment'
 import { Injectable } from '@angular/core';
 import * as Appwrite from "appwrite";
-import { Institute, Project } from 'src/app/models/institute';
+import { Institute, PeptideLibrary, Project } from 'src/app/models/institute';
 import { Session } from 'src/app/models/session';
 import { Account, AccountPreference as AccountPreference } from 'src/app/models/account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Membership, Team } from 'src/app/models/team';
 import { AppwriteError } from 'src/app/models/error';
 import { Recovery } from 'src/app/models/recovery';
+import { AppwriteFile } from 'src/app/models/file';
 
 @Injectable({
   providedIn: 'root'
@@ -474,39 +475,6 @@ export class AppwriteService {
     })
   }
 
-  createProject(data: any, instituteId: string): Promise<Project> {
-    return new Promise<Project>(async (resolve, reject) => {
-      try {
-        console.log('Start add project')
-
-        // owner
-        let account: Account = await this.getAccount()
-        let current = 'user:' + account.$id
-
-        console.log('current', current)
-
-        // create project
-        let res = await this.appwrite.database.createDocument(environment.projectCollectionId, data, [current], [current], '', '', '')
-        let project: Project = res as Project
-
-        // add project to institute
-        let institute = await this.getInstitute(instituteId)
-        if (!institute.projects) {
-          institute.projects = []
-        }
-        institute.projects.push(project)
-        console.log('institute.projectIds', institute.projects)
-        institute = await this.updateInstitute(institute)
-
-        console.log('End add project', res, institute)
-        resolve(res as Project)
-      } catch (e) {
-        this.handleError(e)
-        reject(e)
-      }
-    })
-  }
-
   getProject(id: string): Promise<Project> {
     return new Promise<Project>(async (resolve, reject) => {
       try {
@@ -565,13 +533,99 @@ export class AppwriteService {
     })
   }
 
-  uploadFile(file: File, ids: string[] = ["*"]): Promise<object> {
-    return new Promise<object>(async (resolve, reject) => {
+  createPeptideLibrary(data: PeptideLibrary): Promise<PeptideLibrary> {
+    return new Promise<PeptideLibrary>(async (resolve, reject) => {
+      try {
+        console.log('Start create peptide-library', data)
+        let res = await this.appwrite.database.createDocument(environment.peptideLibraryCollectionId, data, ['*'], ['*'])
+        console.log('End create peptide-library', res)
+        resolve(res as PeptideLibrary)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  listPeptideLibraries(): Promise<PeptideLibrary[]> {
+    return new Promise<PeptideLibrary[]>(async (resolve, reject) => {
+      try {
+        console.log('Start list peptide-library')
+        let res = await this.appwrite.database.listDocuments(environment.peptideLibraryCollectionId)
+        console.log('End list peptide-library', res)
+
+        let peptides: PeptideLibrary[] = (res as any)['documents'] as PeptideLibrary[]
+        resolve(peptides)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  uploadFile(file: File, permissions: string[] = ["*"]): Promise<AppwriteFile> {
+    return new Promise<AppwriteFile>(async (resolve, reject) => {
       try {
 
-        console.log('Start upload file', file)
-        let res = await this.appwrite.storage.createFile(file, ids, ids)
-        console.log('End upload file', file)
+        console.log('Start upload file', file, permissions)
+        let res = await this.appwrite.storage.createFile(file, permissions, permissions)
+        console.log('End upload file', res)
+        resolve(res as AppwriteFile)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  getFile(fileId: string): Promise<AppwriteFile> {
+    return new Promise<AppwriteFile>(async (resolve, reject) => {
+      try {
+        console.log('Start get file', fileId)
+        let res = await this.appwrite.storage.getFile(fileId)
+        console.log('End get file', res)
+        resolve(res as AppwriteFile)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  getFilePreview(fileId: string): Promise<string> {
+    return new Promise<string>(async (resolve, reject) => {
+      try {
+        console.log('Start get file preview', fileId)
+        let res = this.appwrite.storage.getFilePreview(fileId)
+        console.log('End get file preview', res)
+        resolve(res)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  getFileDownload(fileId: string): Promise<string> {
+    return new Promise<string>(async (resolve, reject) => {
+      try {
+        console.log('Start get file download', fileId)
+        let res = this.appwrite.storage.getFileDownload(fileId)
+        console.log('End get file download', res)
+        resolve(res)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  getFileView(fileId: string): Promise<string> {
+    return new Promise<string>(async (resolve, reject) => {
+      try {
+        console.log('Start get file view', fileId)
+        let res = this.appwrite.storage.getFileView(fileId)
+        console.log('End get file view', res)
         resolve(res)
       } catch (e) {
         this.handleError(e)

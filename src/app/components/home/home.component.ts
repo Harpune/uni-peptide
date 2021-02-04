@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Institute } from 'src/app/models/institute';
+import { Institute, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { environment } from 'src/environments/environment'
 import { Router } from '@angular/router';
@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
     } catch (e) {
     }
   }
+
 
   openDialog(): void {
     const dialogRef = this.dialog.open(CreateInstituteComponent, {

@@ -1,0 +1,17 @@
+<mat-dialog-content>
+  <mat-list>
+    <div mat-subheader>Dokumente</div>
+    <mat-list-item *ngFor="let file of files">
+      <mat-icon mat-list-icon>file_present</mat-icon>
+      <div mat-line>{{file.name}}</div>
+      <div mat-line>{{file.dateCreated * 1000 | date}}</div>
+
+      <button mat-icon-button (click)="viewFile(file)">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-icon-button (click)="downloadFile(file)">
+        <mat-icon>download</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>

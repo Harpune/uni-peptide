@@ -1,19 +1,19 @@
 <mat-dialog-content>
   <h3>Neues Institut erstellen</h3>
   <form [formGroup]="instituteForm" id="institute-form" (submit)="submit()">
-    <mat-form-field class="full-width">
+    <mat-form-field>
       <mat-label>Name</mat-label>
       <input matInput #institute maxlength="45" placeholder="Name des Instituts" [(ngModel)]="data.name"
         formControlName="name" required>
       <mat-hint align="end">{{institute.value.length}} / 45</mat-hint>
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field>
       <mat-label>Organisation</mat-label>
       <input matInput #organisation maxlength="45" placeholder="Name der Organisation" [(ngModel)]="data.organisation"
         formControlName="organisation">
       <mat-hint align="end">{{organisation.value.length}} / 45</mat-hint>
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field>
       <mat-label>Addresse</mat-label>
       <input matInput #address maxlength="45" placeholder="Addresse des Instituts" [(ngModel)]="data.address"
         formControlName="address">

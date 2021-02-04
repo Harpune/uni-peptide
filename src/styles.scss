@@ -39,6 +39,19 @@ $default-app-theme: mat-light-theme((color: (primary: $default-app-primary,
 
 .mat-row:hover {
   background-color: mat-color($default-app-primary-tint);
+  cursor: pointer;
+}
+
+mat-card {
+  margin: 24px 64px 24px 64px;
+}
+
+mat-dialog-content{
+  width: 500px;
+}
+
+mat-form-field {
+  width: 100%;
 }
 
 // Include theme styles for core and each component used in your app.

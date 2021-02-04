@@ -31,6 +31,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -46,7 +48,10 @@ import { ProjectComponent } from './components/project/project.component';
 import { CustomStepperComponent } from './components/custom-stepper/custom-stepper.component';
 import { CreateInstituteMemberComponent } from './components/institute-create-member/institute-create-member.component';
 import { MemberInvitationCallbackComponent } from './components/callback-member-invitation/callback-member-invitation.component';
-import { UploadFilesComponent } from './components/upload-files/upload-files.component';
+import { UploadFilesComponent } from './components/files-upload/files-upload.component';
+import { PeptideLibraryComponent } from './components/peptide-library/peptide-library.component';
+import { CreatePeptideLibraryComponent } from './components/peptide-library-create/peptide-library-create.component';
+import { FilesPreviewComponent } from './components/files-preview/files-preview.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +70,10 @@ import { UploadFilesComponent } from './components/upload-files/upload-files.com
     CustomStepperComponent,
     CreateInstituteMemberComponent,
     MemberInvitationCallbackComponent,
-    UploadFilesComponent
+    UploadFilesComponent,
+    PeptideLibraryComponent,
+    CreatePeptideLibraryComponent,
+    FilesPreviewComponent
   ],
   imports: [
     CommonModule,
@@ -94,6 +102,8 @@ import { UploadFilesComponent } from './components/upload-files/upload-files.com
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatTreeModule,
+    MatExpansionModule,
+    MatBadgeModule,
     CdkStepperModule,
     FlexLayoutModule,
     NgxDropzoneModule

@@ -32,4 +32,5 @@ export interface PeptideLibrary {
     name: string;
     organism: string;
     description: string;
+    documentIds: string[];
 }

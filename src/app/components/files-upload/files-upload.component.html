@@ -1,6 +1,6 @@
 <mat-dialog-content>
   <h3>Datei hochladen</h3>
-  <ngx-dropzone #drop (change)="onSelect($event)" style="width: 256px;">
+  <ngx-dropzone #drop (change)="onSelect($event)" style="width: 100%;">
     <ngx-dropzone-label>Drop & Drop</ngx-dropzone-label>
     <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
       <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
@@ -9,5 +9,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button style="margin: 16px;" mat-raised-button (click)="uploadFiles()">Hochladen</button>
+  <button mat-button (click)="uploadFiles()">Hochladen</button>
 </mat-dialog-actions>

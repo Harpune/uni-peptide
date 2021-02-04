@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Institute, Project } from 'src/app/models/institute';
-import { Membership, Team } from 'src/app/models/team';
+import { Membership } from 'src/app/models/team';
 import { Account } from 'src/app/models/account';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { CreateInstituteMemberComponent } from '../institute-create-member/institute-create-member.component';
@@ -60,12 +60,14 @@ export class InstituteDetailsComponent implements OnInit {
     private appwriteService: AppwriteService) { }
 
   ngOnInit(): void {
-    // get project-id
-    const id = this.route.snapshot.paramMap.get('instituteId')
-    if (id) this.id = id
-
-    // get data
-    this.getData()
+    
+    this.route.params.subscribe(params => {
+      console.log('paramas', params)
+      const id = params['instituteId']
+      if (id) this.id = id
+      // get data
+      this.getData()
+    })
   }
 
   async getData() {

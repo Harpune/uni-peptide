@@ -5,17 +5,43 @@
       <button *ngIf="account && isMobile" mat-icon-button>
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
       </button>
-      <span>Peptide</span>
+      <span>{{title}}</span>
+      <!-- <img style="max-width:100%; max-width: 100%;" [src]="logo" alt="image"> -->
+
     </mat-toolbar-row>
   </mat-toolbar>
 
   <mat-sidenav-container style="height: 100%;">
-    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" style="width: 156px;" *ngIf="account">
-      <mat-nav-list>
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" style="width: 256px;"
+      *ngIf="account">
+      <div style="padding: 16px;">
+        <section class="mat-typography">
+          <h2>{{account?.name}}</h2>
+          <h5>{{account?.email}}</h5>
+        </section>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-nav-list dense>
+        <h3 mat-subheader>Allgemeines</h3>
         <mat-list-item *ngFor="let item of navItems" [routerLink]="item.route" (click)="isMobile && sidenav.toggle()">
           <mat-icon mat-list-icon>{{ item.icon }}</mat-icon>
           <div mat-line>{{ item.name }}</div>
         </mat-list-item>
+      </mat-nav-list>
+      <mat-divider></mat-divider>
+      <mat-expansion-panel [class.mat-elevation-z0]="true" *ngIf="institutes">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Institute</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list dense>
+          <mat-list-item *ngFor="let institute of institutes" [routerLink]="'/institute/' + institute.$id">
+            <mat-icon mat-list-icon>biotech</mat-icon>
+            <div mat-line>{{institute.name}}</div>
+            <div mat-line>{{ institute.organisation }}</div>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <mat-nav-list>
         <mat-list-item style="position: absolute; bottom: 0; color: red;" (click)="logout()">
           <mat-icon mat-list-icon>logout</mat-icon>
           <div mat-line>Logout</div>
