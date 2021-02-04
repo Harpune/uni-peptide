@@ -39,7 +39,45 @@ $default-app-theme: mat-light-theme((color: (primary: $default-app-primary,
 
 .mat-row:hover {
   background-color: mat-color($default-app-primary-tint);
+  cursor: pointer;
 }
+
+mat-card {
+  margin: 24px 64px 24px 64px;
+}
+
+mat-dialog-content {
+  width: 500px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.close-button {
+  float: right;
+  top: -24px;
+  right: -24px;
+}
+
+.close-icon {
+  transition: 1s ease-in-out;
+}
+
+.close-icon:hover {
+  transform: rotate(180deg);
+}
+
+::ng-deep .icon-outside .close-button {
+  float: right;
+  top: -52px;
+  right: -52px;
+}
+
+::ng-deep .icon-outside .mat-dialog-container {
+  overflow: unset
+}
+
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component

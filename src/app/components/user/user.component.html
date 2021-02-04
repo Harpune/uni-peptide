@@ -4,7 +4,7 @@
   <!-- <mat-spinner style="margin: 0 auto;" [diameter]="16"></mat-spinner> -->
 </button>
 
-<mat-card *ngIf="account" class="mat-elevation-z8 form-card">
+<mat-card *ngIf="account">
   <mat-icon matTooltip="Dieser Account ist verifiziert" style="position: absolute; top: 16px; right: 16px;"
     *ngIf="account.emailVerification">verified</mat-icon>
   <mat-card-header>
@@ -39,7 +39,7 @@
     </form>
   </mat-card-content>
 
-  <mat-card-actions>
+  <mat-card-actions style="text-align: end;">
     <button mat-raised-button color="primary" class="half-width"
       (click)="toggleAccountEdit()">{{ accountEditable ? 'Rückgängig' : 'Bearbeiten' }}</button>
     <button mat-raised-button type="submit" form="account-form" *ngIf="accountEditable" class="half-width"
@@ -47,7 +47,7 @@
   </mat-card-actions>
 </mat-card>
 
-<mat-card *ngIf="account" class="mat-elevation-z8 form-card">
+<mat-card *ngIf="account">
   <mat-card-header>
     <mat-card-title>Anmeldeinformationen</mat-card-title>
     <mat-card-subtitle>Ändere deine E-Mailaddresse oder dein Passwort</mat-card-subtitle>
@@ -69,7 +69,7 @@
     </form>
   </mat-card-content>
 
-  <mat-card-actions>
+  <mat-card-actions style="text-align: end;">
     <button mat-raised-button color="primary" class="half-width"
       (click)="toggleAuthEdit()">{{ authEditable ? 'Rückgängig' : 'Bearbeiten' }}</button>
     <button mat-raised-button type="submit" form="auth-form" *ngIf="authEditable" class="half-width"
@@ -77,7 +77,7 @@
   </mat-card-actions>
 </mat-card>
 
-<mat-card *ngIf="account" class="mat-elevation-z8 form-card" style="margin-bottom: 32px;">
+<mat-card *ngIf="account">
   <mat-card-header>
     <mat-card-title>Account löschen</mat-card-title>
     <mat-card-subtitle>Damit löschen Sie Ihren Account. Das kann nicht rückgängig gemacht werden!</mat-card-subtitle>

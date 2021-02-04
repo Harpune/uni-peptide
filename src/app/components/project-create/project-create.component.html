@@ -1,17 +1,22 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Neues Projekt anlegen</h1>
+
 <mat-dialog-content>
-  <h3>Neues Projekt anlegen</h3>
   <form [formGroup]="projectForm" id="project-form" (submit)="submit()">
-    <mat-form-field class="full-width">
+    <mat-form-field>
       <mat-label>Name</mat-label>
       <input matInput #name maxlength="45" formControlName="name" required>
       <mat-hint align="end">{{name.value.length}} / 45</mat-hint>
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field>
       <mat-label>Beschreibung</mat-label>
       <input matInput #description maxlength="45" formControlName="description">
       <mat-hint align="end">{{description.value.length}} / 45</mat-hint>
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field>
       <mat-label>Datum</mat-label>
       <input matInput #address type="date" formControlName="date">
     </mat-form-field>

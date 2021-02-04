@@ -1,11 +1,10 @@
-<div style="margin: 32px;">
-  <section class="mat-typography">
-    <h1>Übersicht</h1>
-    <h4>Institute</h4>
-  </section>
-</div>
+<mat-card>
 
-<mat-card class="mat-elevation-z8 form-card">
+  <mat-card-header>
+    <mat-card-title>Institute</mat-card-title>
+    <mat-card-subtitle>Hier sind alle Institute gelistet</mat-card-subtitle>
+
+  </mat-card-header>
   <table mat-table [dataSource]="instituteData" style="width: 100%;" matSort>
 
     <ng-container matColumnDef="teamId">
@@ -32,7 +31,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedInstituteColumns;" (click)="showInstitute(row)"></tr>
 
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="displayedInstituteColumns.length" (click)="openDialog()">Es sind keine Daten
+      <td class="mat-cell" [attr.colspan]="displayedInstituteColumns.length" (click)="openDialog()">Es sind keine
+        Daten
         vorhanden</td>
     </tr>
 
@@ -40,6 +40,9 @@
 
   <mat-paginator [pageSize]="10"></mat-paginator>
 </mat-card>
+
+
+
 
 
 <div class="fab-bottom-right">

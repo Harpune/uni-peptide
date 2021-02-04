@@ -10,7 +10,7 @@ import { Institute, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { MiniFab } from '../institute-details/institute-details.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
-import { UploadFilesComponent } from '../upload-files/upload-files.component';
+import { UploadFilesComponent } from '../files-upload/files-upload.component';
 
 @Component({
   selector: 'app-project',

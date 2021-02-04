@@ -6,6 +6,7 @@ import { Event, NavigationEnd, Router } from '@angular/router';
 import { Session } from './models/session';
 import { HostListener } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { Institute } from './models/institute';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   title = 'Peptide'
+  logo = 'assets/img/logo.png'
   isMobile!: boolean
 
   navItems = [
@@ -25,13 +27,19 @@ export class AppComponent implements OnInit {
       icon: 'house'
     },
     {
-      name: 'User',
+      name: 'Peptid-Bibliothek',
+      route: '/peptide-library',
+      icon: 'local_library'
+    },
+    {
+      name: 'Mein Profil',
       route: '/user',
       icon: 'face'
     }
   ]
 
   account!: Account | null
+  institutes!: Institute[]
 
   constructor(private appwriteService: AppwriteService,
     private router: Router) {
@@ -39,6 +47,7 @@ export class AppComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         console.log('Navigated to', event.urlAfterRedirects)
         this.getAccount()
+        this.getInstitutes()
       }
     })
   }
@@ -51,6 +60,11 @@ export class AppComponent implements OnInit {
     this.appwriteService.getAccount()
       .then((account: Account) => this.account = account)
       .catch(error => this.account = null)
+  }
+
+  async getInstitutes() {
+    this.appwriteService.listInstitutes()
+      .then((institutes: Institute[]) => this.institutes = institutes)
   }
 
   logout(): void {
