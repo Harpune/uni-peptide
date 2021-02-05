@@ -6,7 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { PeptideLibrary } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
-import { FilesPreviewComponent } from '../files-preview/files-preview.component';
+import { FilesPreviewComponent } from '../files-peptide-preview/files-peptide-preview.component';
 import { CreatePeptideLibraryComponent } from '../peptide-library-create/peptide-library-create.component';
 
 @Component({

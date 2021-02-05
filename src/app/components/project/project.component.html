@@ -4,7 +4,7 @@
     <h4>{{project.description}}</h4>
   </section>
 
-  <mat-card class="mat-elevation-z8 form-card" *ngIf="dataSource.data">
+  <mat-card *ngIf="dataSource.data && false">
     <mat-card-header>
       <mat-card-title>Sub-Projekte</mat-card-title>
       <mat-card-subtitle>Alle Sub-Projekte von {{project.name}}</mat-card-subtitle>
@@ -15,8 +15,6 @@
 
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="showProject(node)" class="clickable">
           <li class="mat-tree-node">
-            <!-- use a disabled button to provide padding for tree leaf -->
-            <button mat-icon-button disabled></button>
             {{node.name}}
           </li>
         </mat-tree-node>
@@ -39,15 +37,42 @@
       </mat-tree>
     </mat-card-content>
   </mat-card>
+
+
+  <mat-card *ngIf="peptideLibraries.length > 0">
+    <mat-card-header>
+      <mat-card-title>Peptide</mat-card-title>
+      <mat-card-subtitle>Alle Peptide bezüglich {{project.name}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-action-list *ngIf="peptideLibraries.length > 0;else noPeptideLibraries">
+        <mat-list-item *ngFor="let peptide of peptideLibraries" (click)="showPeptide(peptide)">
+          <div mat-line>{{peptide.name}}</div>
+          <div mat-line>{{peptide.organism}}</div>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+      </mat-action-list>
+
+      <ng-template #noPeptideLibraries>
+        <button mat-raised-button color="primary" (click)="listAllPeptideLibraries()">
+          Peptide hinzufügen
+        </button>
+      </ng-template>
+
+    </mat-card-content>
+  </mat-card>
 </div>
+
+
+
 <div class="fab-container">
   <button mat-fab color="primary" aria-label="Neues Projekt erstellen" class="fab-toggler" (click)="toggleMiniFabs()">
     <mat-icon [@fab-toggler]="{value: fabTogglerState}">add</mat-icon>
     <!-- <span class="extended-fab-button-label">Projekt</span> -->
   </button>
   <div [@speed-dial-stagger]="miniFabButtons.length">
-    <button [color]="btn.color" *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" [disabled]="btn.id === 'delete' && !isOwner"
-      color="secondary" (click)="miniFabClicked(btn)">
+    <button [color]="btn.color" *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button"
+      [disabled]="btn.id === 'delete' && !isOwner" color="secondary" (click)="miniFabClicked(btn)">
       <mat-icon>{{btn.icon}}</mat-icon>
       <span class="extended-fab-button-label">{{btn.label}}</span>
     </button>

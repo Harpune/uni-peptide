@@ -6,9 +6,9 @@ import { PeptideLibrary } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 
 @Component({
-  selector: 'app-files-preview',
-  templateUrl: './files-preview.component.html',
-  styleUrls: ['./files-preview.component.scss']
+  selector: 'app-files-peptide-preview',
+  templateUrl: './files-peptide-preview.component.html',
+  styleUrls: ['./files-peptide-preview.component.scss']
 })
 export class FilesPreviewComponent implements OnInit {
 

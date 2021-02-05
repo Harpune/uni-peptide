@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ResponsiveModule } from 'ngx-responsive'
 import { AvatarModule } from 'ngx-avatar';
 import { CdkStepperModule } from '@angular/cdk/stepper';
@@ -51,7 +51,8 @@ import { MemberInvitationCallbackComponent } from './components/callback-member-
 import { UploadFilesComponent } from './components/files-upload/files-upload.component';
 import { PeptideLibraryComponent } from './components/peptide-library/peptide-library.component';
 import { CreatePeptideLibraryComponent } from './components/peptide-library-create/peptide-library-create.component';
-import { FilesPreviewComponent } from './components/files-preview/files-preview.component';
+import { FilesPreviewComponent } from './components/files-peptide-preview/files-peptide-preview.component';
+import { PeptideLibraryAllComponent } from './components/peptide-library-all/peptide-library-all.component';
 
 @NgModule({
   declarations: [
@@ -73,13 +74,15 @@ import { FilesPreviewComponent } from './components/files-preview/files-preview.
     UploadFilesComponent,
     PeptideLibraryComponent,
     CreatePeptideLibraryComponent,
-    FilesPreviewComponent
+    FilesPreviewComponent,
+    PeptideLibraryAllComponent
   ],
   imports: [
     CommonModule,
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ResponsiveModule.forRoot(),

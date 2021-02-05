@@ -22,7 +22,7 @@ export interface Project {
     created: string;
     updated: string;
     subprojects: Project[];
-    peptideLibraries: PeptideLibrary[];
+    peptideLibraryIds: string[];
 }
 
 export interface PeptideLibrary {

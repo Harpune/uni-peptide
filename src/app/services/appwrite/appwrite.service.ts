@@ -547,6 +547,20 @@ export class AppwriteService {
     })
   }
 
+  getPeptideLibrary(peptideLibraryId: string): Promise<PeptideLibrary> {
+    return new Promise<PeptideLibrary>(async (resolve, reject) => {
+      try {
+        console.log('Start get peptide-library', peptideLibraryId)
+        let res = await this.appwrite.database.getDocument(environment.peptideLibraryCollectionId, peptideLibraryId)
+        console.log('End get peptide-library', res)
+        resolve(res as PeptideLibrary)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
   listPeptideLibraries(): Promise<PeptideLibrary[]> {
     return new Promise<PeptideLibrary[]>(async (resolve, reject) => {
       try {

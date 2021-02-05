@@ -6,11 +6,12 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
 import { speedDialFabAnimations } from 'src/app/animations/fab-rotation.animations';
 import { Account } from 'src/app/models/account';
-import { Institute, Project } from 'src/app/models/institute';
+import { Institute, PeptideLibrary, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { MiniFab } from '../institute-details/institute-details.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
 import { UploadFilesComponent } from '../files-upload/files-upload.component';
+import { PeptideLibraryAllComponent } from '../peptide-library-all/peptide-library-all.component';
 
 @Component({
   selector: 'app-project',
@@ -26,10 +27,12 @@ export class ProjectComponent implements OnInit {
   project!: Project
   account!: Account
   isOwner: boolean = false
+  peptideLibraries: PeptideLibrary[] = []
 
   miniFabButtons: MiniFab[] = []
   fabTogglerState: string = 'inactive';
   fabButtons: MiniFab[] = [
+    { icon: 'local_library', label: 'Peptid hinzufügen', id: 'peptide' },
     { icon: 'lightbulb_outline', label: 'Sub-Projekt', id: 'subproject' },
     { icon: 'attach_file', label: 'Hochladen', id: 'upload' },
     { icon: 'delete', label: 'Löschen', id: 'delete', color: 'warn' }]
@@ -65,6 +68,12 @@ export class ProjectComponent implements OnInit {
         .filter(role => role.includes(this.institute.teamId))
         .some(role => role.includes('owner'))
 
+      this.peptideLibraries = []
+      if (this.project.peptideLibraryIds) {
+        for await (const peptideLibrary of this.project.peptideLibraryIds.map(peptideLibraryId =>
+          this.appwriteService.getPeptideLibrary(peptideLibraryId))) this.peptideLibraries.push(peptideLibrary)
+      }
+
     } catch (e) {
       console.log(e)
     }
@@ -98,9 +107,27 @@ export class ProjectComponent implements OnInit {
         this.openFilesDialog()
         break;
       case 'delete':
-        this.deleteProject();
+        this.deleteProject()
         break;
+      case 'peptide':
+        this.listAllPeptideLibraries()
     }
+  }
+
+  async listAllPeptideLibraries() {
+    const dialogRef = this.dialog.open(PeptideLibraryAllComponent, {
+      data: this.project.peptideLibraryIds
+    })
+
+    dialogRef.afterClosed().subscribe((peptideLibraryIds: string[]) => {
+      // update ids
+      this.project.peptideLibraryIds = peptideLibraryIds
+
+      // save
+      this.appwriteService.updateProject(this.project)
+        .then(project => this.getData())
+        .finally(() => this.hideMiniFabs())
+    })
   }
 
   deleteProject() {
@@ -154,5 +181,9 @@ export class ProjectComponent implements OnInit {
       this.getData()
       this.hideMiniFabs()
     })
+  }
+
+  showPeptide(peptideLibrary: PeptideLibrary) {
+    this.snackBar.open('Show everthing about ' + peptideLibrary.name, 'Ok', { duration: 2000 })
   }
 }

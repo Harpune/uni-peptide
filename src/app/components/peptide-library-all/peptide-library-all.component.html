@@ -1,0 +1,19 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Alle Peptide in der Bibliothek</h1>
+
+<mat-dialog-content>
+  <mat-selection-list #list [(ngModel)]="peptideLibraryIds">
+    <mat-list-option *ngFor="let peptideLibrary of allPeptideLibraries" [value]="peptideLibrary.$id">
+      <div mat-line>{{peptideLibrary.name}}</div>
+      <div mat-line>{{peptideLibrary.organism}}</div>
+    </mat-list-option>
+  </mat-selection-list>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button (click)="addPeptideLibrary()">Hinzufügen</button>
+</mat-dialog-actions>
