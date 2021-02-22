@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ResponsiveModule } from 'ngx-responsive'
 import { AvatarModule } from 'ngx-avatar';
 import { CdkStepperModule } from '@angular/cdk/stepper';
+import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 
@@ -108,6 +109,7 @@ import { PeptideLibraryAllComponent } from './components/peptide-library-all/pep
     MatExpansionModule,
     MatBadgeModule,
     CdkStepperModule,
+    LayoutModule,
     FlexLayoutModule,
     NgxDropzoneModule
   ],

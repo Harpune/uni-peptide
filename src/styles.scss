@@ -7,7 +7,7 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 // @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
@@ -20,19 +20,79 @@ body {
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
+$md-uniblue: (50 : #e0eff3,
+  100 : #b3d6e0,
+  200 : #80bbcb,
+  300 : #4d9fb6,
+  400 : #268ba7,
+  500 : #007697,
+  600 : #006e8f,
+  700 : #006384,
+  800 : #00597a,
+  900 : #004669,
+  A100 : #98d7ff,
+  A200 : #65c2ff,
+  A400 : #32aeff,
+  A700 : #19a4ff,
+  contrast: (50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  ));
+
+$md-unigreen: (50 : #e6f0ef,
+  100 : #c0d9d6,
+  200 : #96bfbb,
+  300 : #6ba5a0,
+  400 : #4c928b,
+  500 : #2c7f77,
+  600 : #27776f,
+  700 : #216c64,
+  800 : #1b625a,
+  900 : #104f47,
+  A100 : #88ffee,
+  A200 : #55ffe7,
+  A400 : #22ffdf,
+  A700 : #08ffdc,
+  contrast: (50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  ));
+
+
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$default-app-primary: mat-palette($mat-red, A100, A200, A400);
-$default-app-primary-tint: mat-palette($mat-red, 50);
-$default-app-accent: mat-palette($mat-indigo, A200, A100, A400);
-$default-app-warn: mat-palette($mat-red);
+$default-app-primary: mat-palette($md-uniblue, 500, 300, 700);
+$default-app-primary-tint: mat-palette($md-uniblue, 50);
+$default-app-accent: mat-palette($md-unigreen, 500, 300, 700);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as `color` or `typography`.
-$default-app-theme: mat-light-theme((color: (primary: $default-app-primary,
+$blue-app-theme: mat-light-theme((color: (primary: $default-app-primary,
       accent: $default-app-accent,
-      warn: $default-app-warn,
     )));
 
 
@@ -42,8 +102,12 @@ $default-app-theme: mat-light-theme((color: (primary: $default-app-primary,
   cursor: pointer;
 }
 
-mat-card {
+.main-card {
   margin: 24px 64px 24px 64px;
+}
+
+.side-card {
+  margin: 24px 32px 24px 32px;
 }
 
 mat-dialog-content {
@@ -60,26 +124,7 @@ mat-form-field {
   right: -24px;
 }
 
-.close-icon {
-  transition: 1s ease-in-out;
-}
-
-.close-icon:hover {
-  transform: rotate(180deg);
-}
-
-::ng-deep .icon-outside .close-button {
-  float: right;
-  top: -52px;
-  right: -52px;
-}
-
-::ng-deep .icon-outside .mat-dialog-container {
-  overflow: unset
-}
-
-
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($default-app-theme);
+@include angular-material-theme($blue-app-theme);

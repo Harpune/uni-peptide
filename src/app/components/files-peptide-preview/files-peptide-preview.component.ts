@@ -27,7 +27,9 @@ export class FilesPreviewComponent implements OnInit {
   }
 
   async getFiles() {
-    for await (const file of this.peptideLibrary.documentIds.map(documentId => this.appwriteService.getFile(documentId))) this.files.push(file)
+    if (this.peptideLibrary.documentIds?.length > 0) {
+      for await (const file of this.peptideLibrary.documentIds.map(documentId => this.appwriteService.getFile(documentId))) this.files.push(file)
+    }
   }
 
   async viewFile(file: AppwriteFile) {

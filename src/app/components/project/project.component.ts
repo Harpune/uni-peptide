@@ -32,8 +32,6 @@ export class ProjectComponent implements OnInit {
   miniFabButtons: MiniFab[] = []
   fabTogglerState: string = 'inactive';
   fabButtons: MiniFab[] = [
-    { icon: 'local_library', label: 'Peptid hinzufügen', id: 'peptide' },
-    { icon: 'lightbulb_outline', label: 'Sub-Projekt', id: 'subproject' },
     { icon: 'attach_file', label: 'Hochladen', id: 'upload' },
     { icon: 'delete', label: 'Löschen', id: 'delete', color: 'warn' }]
 
@@ -109,8 +107,6 @@ export class ProjectComponent implements OnInit {
       case 'delete':
         this.deleteProject()
         break;
-      case 'peptide':
-        this.listAllPeptideLibraries()
     }
   }
 

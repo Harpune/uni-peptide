@@ -1,12 +1,12 @@
 <div class="root-container" fullscreen>
 
-  <mat-toolbar color="primary">
+  <mat-toolbar class="toolbar-color">
     <mat-toolbar-row>
       <button *ngIf="account && isMobile" mat-icon-button>
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
       </button>
-      <span style="cursor: pointer;" routerLink="/home">{{title}}</span>
-      <!-- <img style="max-width:100%; max-width: 100%;" [src]="logo" alt="image"> -->
+      <img style="max-width:100%; max-height: 100%; margin-right: 16px; margin-left: 16px; cursor: pointer; "
+        [src]="logo" routerLink="/home" alt="image">
 
     </mat-toolbar-row>
   </mat-toolbar>
@@ -18,7 +18,9 @@
 
       <div style="padding: 16px;">
         <section class="mat-typography" style="cursor: pointer;" routerLink="/user">
+
           <h4><b>{{account?.name}}</b><br>{{account?.email}}</h4>
+          <!-- <img style="max-width:100%; max-height: 100%; margin-right: 16px; cursor: pointer;" [src]="uni" alt="image"> -->
         </section>
       </div>
 
@@ -51,9 +53,12 @@
 
       <mat-expansion-panel [class.mat-elevation-z0]="true" *ngIf="currentInstitute">
         <mat-expansion-panel-header>
-          <mat-panel-title>Projekte</mat-panel-title>
+          <mat-panel-title>{{currentInstitute.name}}</mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl" class="project-tree">
+
+        <p>Projekte:</p>
+        <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl" *ngIf="dataSource.data; else noTree"
+          class="project-tree">
 
           <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="showProject(node)" class="clickable">
             <li class="mat-tree-node">
@@ -80,6 +85,9 @@
           </mat-nested-tree-node>
         </mat-tree>
 
+        <ng-template #noTree>
+          <button mat-stroked-button style="width: 100%;" color="primary" (click)="openProjectDialog()">Erstes Projekt erstellen</button>
+        </ng-template>
 
       </mat-expansion-panel>
 

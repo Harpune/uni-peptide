@@ -44,11 +44,6 @@ export class InstituteDetailsComponent implements OnInit {
   displayedMemberColumns: string[] = ['name', 'email', 'joined']
   membershipData!: MatTableDataSource<Membership>
 
-  miniFabButtons: MiniFab[] = []
-  fabTogglerState: string = 'inactive'
-  fabButtons: MiniFab[] = [{ icon: 'person_add', label: 'Mitglied', id: 'member' },
-  { icon: 'lightbulb_outline', label: 'Projekt', id: 'project' }]
-
   treeControl = new NestedTreeControl<Project>(node => node.subprojects)
   dataSource = new MatTreeNestedDataSource<Project>()
   hasChild = (_: number, node: Project) => !!node.subprojects && node.subprojects.length > 0
@@ -60,7 +55,7 @@ export class InstituteDetailsComponent implements OnInit {
     private appwriteService: AppwriteService) { }
 
   ngOnInit(): void {
-    
+
     this.route.params.subscribe(params => {
       console.log('paramas', params)
       const id = params['instituteId']
@@ -141,7 +136,6 @@ export class InstituteDetailsComponent implements OnInit {
         this.institute.projects.push(project)
         this.appwriteService.updateInstitute(this.institute)
           .then(() => this.getData())
-          .finally(() => this.hideMiniFabs())
       }
     })
   }
@@ -154,34 +148,8 @@ export class InstituteDetailsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       console.log('Res Dialog', res)
       this.getData()
-      this.hideMiniFabs()
     })
 
-  }
-
-  toggleMiniFabs() {
-    this.miniFabButtons.length ? this.hideMiniFabs() : this.showMiniFabs();
-  }
-
-  showMiniFabs() {
-    this.miniFabButtons = this.fabButtons
-    this.fabTogglerState = 'active'
-  }
-
-  hideMiniFabs() {
-    this.fabTogglerState = 'inactive'
-    this.miniFabButtons = []
-  }
-
-  miniFabClicked(miniFab: MiniFab) {
-    switch (miniFab.id) {
-      case 'member':
-        this.openMembershipDialog()
-        break;
-      case 'project':
-        this.openProjectDialog()
-        break;
-    }
   }
 
   onRightClick() {
@@ -223,7 +191,7 @@ export class InstituteDetailsComponent implements OnInit {
   }
 
   async removeMembership(membership: Membership) {
-    if (confirm('Soll ' + membership.name + ' wirklich das Insitut verlassen?')) {
+    if (confirm('Wollen ' + membership.name + ' aus dem Institut entfernen?')) {
       try {
         await this.appwriteService.deleteMembershipStatus(this.institute.teamId, membership.$id)
       } catch (e) {

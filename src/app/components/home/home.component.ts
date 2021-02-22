@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment'
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateInstituteComponent } from '../institute-create/institute-create.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-home',
@@ -29,8 +30,18 @@ export class HomeComponent implements OnInit {
   treeControl!: any
 
   constructor(private appwriteService: AppwriteService,
+    private breakpointObserver: BreakpointObserver,
     private dialog: MatDialog,
     private router: Router) {
+
+    breakpointObserver.observe([
+      Breakpoints.Medium,
+      Breakpoints.Large
+    ]).subscribe(result => {
+      if (result.matches) {
+        console.log("HALLO!", result)
+      }
+    });
   }
 
   ngOnInit(): void {

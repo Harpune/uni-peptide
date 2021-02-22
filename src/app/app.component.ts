@@ -9,6 +9,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Institute, Project } from './models/institute';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateProjectComponent } from './components/project-create/project-create.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +23,7 @@ export class AppComponent implements OnInit {
 
   title = 'Peptide'
   logo = 'assets/img/logo.png'
+  uni = 'assets/img/uni.svg'
   isMobile!: boolean
 
   navItems = [
@@ -52,6 +55,7 @@ export class AppComponent implements OnInit {
 
   constructor(private appwriteService: AppwriteService,
     private route: ActivatedRoute,
+    private dialog: MatDialog,
     private router: Router) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
@@ -97,7 +101,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-
+  openProjectDialog() {
+    console.log("TODO")
+  }
 
   showProject(project: Project) {
     this.router.navigate(['/institute/' + this.currentInstitute?.$id + '/project/' + project.$id])
