@@ -5,15 +5,35 @@
 <h1 mat-dialog-title>Alle Peptide in der Bibliothek</h1>
 
 <mat-dialog-content>
-  <mat-selection-list #list [(ngModel)]="peptideLibraryIds">
+  <!-- <mat-selection-list #list [(ngModel)]="peptideLibraryIds">
     <mat-list-option *ngFor="let peptideLibrary of allPeptideLibraries" [value]="peptideLibrary.$id">
       <div mat-line>{{peptideLibrary.name}}</div>
       <div mat-line>{{peptideLibrary.organism}}</div>
     </mat-list-option>
-  </mat-selection-list>
+  </mat-selection-list> -->
+
+  <mat-form-field style="width: 100%;">
+    <mat-label>Ausgewählte Peptide</mat-label>
+    <mat-chip-list #chipList aria-label="Fruit selection">
+      <mat-chip *ngFor="let peptideLibrary of selectedPeptideLibraries" [selectable]="selectable"
+        [removable]="removable" (removed)="remove(peptideLibrary)">
+        {{peptideLibrary.name}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Neues Peptid..." #peptideLibraryInput [formControl]="peptideLibraryCtrl"
+        (matChipInputTokenEnd)="add($event)" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+    </mat-chip-list>
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let filtered of filteredPeptideLibraries | async" [value]="filtered">
+        {{filtered.name}} - {{filtered.organism}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
 </mat-dialog-content>
 
 
 <mat-dialog-actions>
-  <button mat-stroked-button color="primary" style="width: 100%;" (click)="addPeptideLibrary()">Hinzufügen</button>
+  <button mat-stroked-button color="primary" style="width: 100%;" (click)="save()">Übernehmen</button>
 </mat-dialog-actions>

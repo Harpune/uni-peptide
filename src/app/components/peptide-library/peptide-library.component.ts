@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PeptideLibrary } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { FilesPreviewComponent } from '../files-peptide-preview/files-peptide-preview.component';
@@ -13,13 +14,13 @@ import { CreatePeptideLibraryComponent } from '../peptide-library-create/peptide
   selector: 'app-peptide-library',
   templateUrl: './peptide-library.component.html',
   styleUrls: ['./peptide-library.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  // animations: [
+  //   trigger('detailExpand', [
+  //     state('collapsed', style({ height: '0px', minHeight: '0' })),
+  //     state('expanded', style({ height: '*' })),
+  //     transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+  //   ]),
+  // ],
 })
 export class PeptideLibraryComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
@@ -30,6 +31,8 @@ export class PeptideLibraryComponent implements OnInit {
   expandedElement!: PeptideLibrary | null
 
   constructor(private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
     private appwriteService: AppwriteService) { }
 
   ngOnInit(): void {
@@ -48,13 +51,18 @@ export class PeptideLibraryComponent implements OnInit {
 
   addPeptideLibrary() {
     const dialogRef = this.dialog.open(CreatePeptideLibraryComponent, {
-      data: "Wow"
+      data: ""
     })
 
     dialogRef.afterClosed().subscribe(data => {
       console.log('Created Peptide Libaray', data)
       this.listPeptideLibraries()
     })
+  }
+
+  async showPeptide(peptideLibrary: PeptideLibrary) {
+    console.log("peptideLibrary", peptideLibrary)
+    this.router.navigate([peptideLibrary.$id], { relativeTo: this.route })
   }
 
   async showDocuments(peptideLibrary: PeptideLibrary) {
@@ -86,9 +94,5 @@ export class PeptideLibraryComponent implements OnInit {
       files.push(file)
     }
     window.open(files[0], "_blank")
-  }
-
-  openDocument(url: string) {
-
   }
 }

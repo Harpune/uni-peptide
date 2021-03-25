@@ -102,7 +102,23 @@ export class AppComponent implements OnInit {
   }
 
   openProjectDialog() {
-    console.log("TODO")
+    const dialogRef = this.dialog.open(CreateProjectComponent, {
+      data: this.currentInstitute
+    })
+
+    dialogRef.afterClosed().subscribe(project => {
+      console.log('Created Project', project)
+      if (this.currentInstitute && project) {
+
+        if (!this.currentInstitute.projects) {
+          this.currentInstitute.projects = []
+        }
+
+        this.currentInstitute.projects.push(project)
+        this.appwriteService.updateInstitute(this.currentInstitute)
+          .then(() => this.getInstitutes())
+      }
+    })
   }
 
   showProject(project: Project) {

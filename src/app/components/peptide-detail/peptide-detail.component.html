@@ -1,0 +1,33 @@
+<div fxLayout="row" fxLayout.lt-md="column">
+  <div fxFlexOrder="1" fxFlex="3 2 66%">
+    <section class="mat-typography" style="margin: 32px;">
+      <h1>{{peptideLibrary ? peptideLibrary.name : "Name"}}</h1>
+      <h4>{{peptideLibrary ? peptideLibrary.organism : "Organismus"}}</h4>
+      <p>{{peptideLibrary ? peptideLibrary.description : "Beschreibung lädt..."}}</p>
+    </section>
+  </div>
+  <div fxFlexOrder="2" fxFlex="1 1 33%">
+
+    <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}">
+      <mat-card-header>
+        <mat-card-title>Datei hinzufügen</mat-card-title>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary" style="width: 100%;" (click)="openFileUpload()">Hinzufügen</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <ng-container *ngFor="let file of appwriteFileUrls | keyvalue; let last=last" [ngSwitch]="file.value">
+      <object *ngSwitchCase="'application/pdf'" [data]="file.key | safe:'resourceUrl'" [type]="file.value" width="100%"
+        height="600px"></object>
+      <img *ngSwitchDefault [src]="file.key" width="100%" (click)="window.open(file.key, '_blank')"
+        style="cursor: pointer;" />
+      <hr style="margin: 20px 0px 20px 0px;" *ngIf="!last">
+    </ng-container>
+
+    <!-- <iframe class="documentView" *ngFor="let pdf of appwriteFiles" width="100%" height="100%" frameborder="0"
+      scrolling="no" (onload)="resizeIframe(this)" [src]="pdf | safe:'resourceUrl'">
+    </iframe> -->
+
+  </div>
+</div>

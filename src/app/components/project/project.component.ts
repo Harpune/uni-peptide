@@ -10,7 +10,6 @@ import { Institute, PeptideLibrary, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
 import { MiniFab } from '../institute-details/institute-details.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
-import { UploadFilesComponent } from '../files-upload/files-upload.component';
 import { PeptideLibraryAllComponent } from '../peptide-library-all/peptide-library-all.component';
 
 @Component({
@@ -82,47 +81,18 @@ export class ProjectComponent implements OnInit {
     this.router.navigate(['institute/' + this.instituteId + '/project/' + project.$id])
   }
 
-  toggleMiniFabs() {
-    this.miniFabButtons.length ? this.hideMiniFabs() : this.showMiniFabs();
-  }
-
-  showMiniFabs() {
-    this.fabTogglerState = 'active'
-    this.miniFabButtons = this.fabButtons
-  }
-
-  hideMiniFabs() {
-    this.fabTogglerState = 'inactive'
-    this.miniFabButtons = []
-  }
-
-  miniFabClicked(miniFab: MiniFab) {
-    switch (miniFab.id) {
-      case 'subproject':
-        this.openProjectDialog()
-        break;
-      case 'upload':
-        this.openFilesDialog()
-        break;
-      case 'delete':
-        this.deleteProject()
-        break;
-    }
-  }
-
   async listAllPeptideLibraries() {
     const dialogRef = this.dialog.open(PeptideLibraryAllComponent, {
       data: this.project.peptideLibraryIds
     })
 
-    dialogRef.afterClosed().subscribe((peptideLibraryIds: string[]) => {
+    dialogRef.afterClosed().subscribe((peptideLibrary: PeptideLibrary[]) => {
       // update ids
-      this.project.peptideLibraryIds = peptideLibraryIds
+      this.project.peptideLibraryIds = peptideLibrary.map(it => it.$id)
 
       // save
       this.appwriteService.updateProject(this.project)
         .then(project => this.getData())
-        .finally(() => this.hideMiniFabs())
     })
   }
 
@@ -159,25 +129,23 @@ export class ProjectComponent implements OnInit {
         this.project.subprojects.push(project)
         this.appwriteService.updateProject(this.project)
           .then(() => this.getData())
-          .finally(() => this.hideMiniFabs())
       }
     })
   }
 
-  openFilesDialog() {
-    const dialogRef = this.dialog.open(UploadFilesComponent, {
-      data: {
-        project: this.project,
-        institute: this.institute
-      }
-    })
-
-    dialogRef.afterClosed().subscribe(res => {
-      console.log('Res Dialog', res)
-      this.getData()
-      this.hideMiniFabs()
-    })
-  }
+  // openFilesDialog() {
+  //   const dialogRef = this.dialog.open(UploadFilesComponent, {
+  //     data: {
+  //       project: this.project,
+  //       institute: this.institute
+  //     }
+  //   })
+  //   dialogRef.afterClosed().subscribe(res => {
+  //     console.log('Res Dialog', res)
+  //     this.getData()
+  //     this.hideMiniFabs()
+  //   })
+  // }
 
   showPeptide(peptideLibrary: PeptideLibrary) {
     this.snackBar.open('Show everthing about ' + peptideLibrary.name, 'Ok', { duration: 2000 })

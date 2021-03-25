@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,7 +14,6 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,6 +34,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -54,6 +56,8 @@ import { PeptideLibraryComponent } from './components/peptide-library/peptide-li
 import { CreatePeptideLibraryComponent } from './components/peptide-library-create/peptide-library-create.component';
 import { FilesPreviewComponent } from './components/files-peptide-preview/files-peptide-preview.component';
 import { PeptideLibraryAllComponent } from './components/peptide-library-all/peptide-library-all.component';
+import { PeptideDetailComponent } from './components/peptide-detail/peptide-detail.component';
+import { SafePipe } from './pipe/safe-pipe/safe-pipe.pipe';
 
 @NgModule({
   declarations: [
@@ -76,7 +80,9 @@ import { PeptideLibraryAllComponent } from './components/peptide-library-all/pep
     PeptideLibraryComponent,
     CreatePeptideLibraryComponent,
     FilesPreviewComponent,
-    PeptideLibraryAllComponent
+    PeptideLibraryAllComponent,
+    PeptideDetailComponent,
+    SafePipe
   ],
   imports: [
     CommonModule,
@@ -87,6 +93,7 @@ import { PeptideLibraryAllComponent } from './components/peptide-library-all/pep
     BrowserAnimationsModule,
     HttpClientModule,
     ResponsiveModule.forRoot(),
+    PdfViewerModule,
     AvatarModule,
     MatSidenavModule,
     MatToolbarModule,
@@ -108,6 +115,8 @@ import { PeptideLibraryAllComponent } from './components/peptide-library-all/pep
     MatTreeModule,
     MatExpansionModule,
     MatBadgeModule,
+    MatChipsModule,
+    MatAutocompleteModule,
     CdkStepperModule,
     LayoutModule,
     FlexLayoutModule,
