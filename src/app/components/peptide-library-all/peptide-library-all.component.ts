@@ -71,7 +71,7 @@ export class PeptideLibraryAllComponent implements OnInit {
     if (!this.selectedPeptideLibraries.includes(selected)) {
       this.selectedPeptideLibraries.push(event.option.value)
     } else {
-      this.snackBar.open(selected.name + ' wurde bereits hinzugefügt.', 's', { duration: 2000 })
+      this.snackBar.open(selected.name + ' wurde bereits hinzugefügt.', 'Ok', { duration: 2000 })
     }
     this.peptideLibraryInput.nativeElement.value = ''
     this.peptideLibraryCtrl.setValue(null)
