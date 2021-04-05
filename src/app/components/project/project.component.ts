@@ -133,21 +133,8 @@ export class ProjectComponent implements OnInit {
     })
   }
 
-  // openFilesDialog() {
-  //   const dialogRef = this.dialog.open(UploadFilesComponent, {
-  //     data: {
-  //       project: this.project,
-  //       institute: this.institute
-  //     }
-  //   })
-  //   dialogRef.afterClosed().subscribe(res => {
-  //     console.log('Res Dialog', res)
-  //     this.getData()
-  //     this.hideMiniFabs()
-  //   })
-  // }
-
   showPeptide(peptideLibrary: PeptideLibrary) {
-    this.snackBar.open('Show everthing about ' + peptideLibrary.name, 'Ok', { duration: 2000 })
+    // this.snackBar.open('Show everthing about ' + peptideLibrary.name, 'Ok', { duration: 2000 })
+    this.router.navigate(['./peptide/' + peptideLibrary.$id], { relativeTo: this.route })
   }
 }

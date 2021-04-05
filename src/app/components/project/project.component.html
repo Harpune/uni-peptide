@@ -31,14 +31,14 @@
   </div>
   <div fxFlexOrder="2" fxFlex="1 1 33%">
 
-    <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}" *ngIf="project && dataSource.data">
+    <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}" *ngIf="project">
       <mat-card-header>
         <mat-card-title>Projekte</mat-card-title>
         <mat-card-subtitle>Alle Projekte unter {{project.name}}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
 
-        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="project-tree">
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="project-tree" *ngIf="dataSource.data">
           <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="showProject(node)" class="clickable">
             <li class="mat-tree-node">
               {{node.name}}

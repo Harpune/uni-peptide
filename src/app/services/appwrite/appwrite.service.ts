@@ -594,7 +594,6 @@ export class AppwriteService {
   uploadFile(file: File, permissions: string[] = ["*"]): Promise<AppwriteFile> {
     return new Promise<AppwriteFile>(async (resolve, reject) => {
       try {
-
         console.log('Start upload file', file, permissions)
         let res = await this.appwrite.storage.createFile(file, permissions, permissions)
         console.log('End upload file', res)

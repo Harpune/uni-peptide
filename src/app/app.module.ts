@@ -35,6 +35,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ChartsModule } from 'ng2-charts';
 
 import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -57,6 +58,7 @@ import { FilesPreviewComponent } from './components/files-peptide-preview/files-
 import { PeptideLibraryAllComponent } from './components/peptide-library-all/peptide-library-all.component';
 import { PeptideDetailComponent } from './components/peptide-detail/peptide-detail.component';
 import { SafePipe } from './pipe/safe-pipe/safe-pipe.pipe';
+import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,8 @@ import { SafePipe } from './pipe/safe-pipe/safe-pipe.pipe';
     FilesPreviewComponent,
     PeptideLibraryAllComponent,
     PeptideDetailComponent,
-    SafePipe
+    SafePipe,
+    ProjectDetailComponent
   ],
   imports: [
     CommonModule,
@@ -89,6 +92,7 @@ import { SafePipe } from './pipe/safe-pipe/safe-pipe.pipe';
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    ChartsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ResponsiveModule.forRoot(),
