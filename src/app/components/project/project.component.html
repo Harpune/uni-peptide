@@ -3,6 +3,14 @@
   <h4>{{project ? project.description : ''}}</h4>
 </section>
 
+<button mat-icon-button class="favorite_button" (click)="toggleFavorite()">
+  <mat-icon color="primary" *ngIf="!isFavorite; else favorite">favorite_border</mat-icon>
+</button>
+<ng-template #favorite>
+  <mat-icon color="primary">favorite</mat-icon>
+</ng-template>
+
+
 <div fxLayout="row" fxLayout.lt-md="column">
   <div fxFlexOrder="1" fxFlex="3 2 66%">
 

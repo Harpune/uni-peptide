@@ -8,7 +8,6 @@ import { speedDialFabAnimations } from 'src/app/animations/fab-rotation.animatio
 import { Account } from 'src/app/models/account';
 import { Institute, PeptideLibrary, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
-import { MiniFab } from '../institute-details/institute-details.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
 import { PeptideLibraryAllComponent } from '../peptide-library-all/peptide-library-all.component';
 
@@ -28,11 +27,7 @@ export class ProjectComponent implements OnInit {
   isOwner: boolean = false
   peptideLibraries: PeptideLibrary[] = []
 
-  miniFabButtons: MiniFab[] = []
-  fabTogglerState: string = 'inactive';
-  fabButtons: MiniFab[] = [
-    { icon: 'attach_file', label: 'Hochladen', id: 'upload' },
-    { icon: 'delete', label: 'Löschen', id: 'delete', color: 'warn' }]
+  isFavorite: boolean = false
 
   treeControl = new NestedTreeControl<Project>(node => node.subprojects)
   dataSource = new MatTreeNestedDataSource<Project>()
@@ -70,6 +65,8 @@ export class ProjectComponent implements OnInit {
         for await (const peptideLibrary of this.project.peptideLibraryIds.map(peptideLibraryId =>
           this.appwriteService.getPeptideLibrary(peptideLibraryId))) this.peptideLibraries.push(peptideLibrary)
       }
+
+      this.checkIfFavorite()
 
     } catch (e) {
       console.log(e)
@@ -136,5 +133,46 @@ export class ProjectComponent implements OnInit {
   showPeptide(peptideLibrary: PeptideLibrary) {
     // this.snackBar.open('Show everthing about ' + peptideLibrary.name, 'Ok', { duration: 2000 })
     this.router.navigate(['./peptide/' + peptideLibrary.$id], { relativeTo: this.route })
+  }
+
+  checkIfFavorite() {
+    // project with insitute concatenated
+    let projectKey = this.instituteId + ':' + this.projectId
+
+    let fav_projects: string[] = this.account?.prefs?.fav_projects
+    if (fav_projects) {
+      this.isFavorite = fav_projects.includes(projectKey)
+    } else {
+      this.isFavorite = false
+    }
+  }
+
+  toggleFavorite() {
+    this.isFavorite = !this.isFavorite
+
+    // project with insitute concatenated
+    let projectKey = this.instituteId + ':' + this.projectId
+
+    // exisiting favorites
+    let fav_projects: string[] = this.account.prefs.fav_projects
+
+    // make sure it exists
+    if (!fav_projects) {
+      fav_projects = []
+    }
+
+    // remove or add project id to account preferences
+    if (this.isFavorite) {
+      fav_projects.push(projectKey)
+    } else {
+      const index = fav_projects.indexOf(projectKey, 0);
+      if (index > -1) {
+        fav_projects.splice(index, 1);
+      }
+    }
+
+    // update account preferences
+    this.account.prefs.fav_projects = fav_projects
+    this.appwriteService.updateAccountPrefs(this.account.prefs)
   }
 }
