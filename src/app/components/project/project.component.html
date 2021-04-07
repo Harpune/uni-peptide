@@ -3,14 +3,6 @@
   <h4>{{project ? project.description : ''}}</h4>
 </section>
 
-<button mat-icon-button class="favorite_button" (click)="toggleFavorite()">
-  <mat-icon color="primary" *ngIf="!isFavorite; else favorite">favorite_border</mat-icon>
-</button>
-<ng-template #favorite>
-  <mat-icon color="primary">favorite</mat-icon>
-</ng-template>
-
-
 <div fxLayout="row" fxLayout.lt-md="column">
   <div fxFlexOrder="1" fxFlex="3 2 66%">
 
@@ -38,6 +30,19 @@
 
   </div>
   <div fxFlexOrder="2" fxFlex="1 1 33%">
+
+    <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}">
+      <mat-card-header>
+        <mat-card-title>Favorit</mat-card-title>
+        <mat-card-subtitle>Favorisierte Projekte werden auf der Startseite angezeigt.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary" style="width: 100%;" (click)="toggleFavorite()">
+          <mat-icon>{{!isFavorite ? "favorite_border" : "favorite"}}</mat-icon>
+          Favorisieren
+        </button>
+      </mat-card-actions>
+    </mat-card>
 
     <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}" *ngIf="project">
       <mat-card-header>

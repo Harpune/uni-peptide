@@ -57,7 +57,6 @@ export class InstituteDetailsComponent implements OnInit {
   ngOnInit(): void {
 
     this.route.params.subscribe(params => {
-      console.log('paramas', params)
       const id = params['instituteId']
       if (id) this.id = id
       // get data

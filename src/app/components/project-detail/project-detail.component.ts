@@ -27,7 +27,6 @@ export class ProjectDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      console.log('paramas', params)
       this.instituteId = params['instituteId']
       this.projectId = params['projectId']
       this.peptideId = params['peptideId']

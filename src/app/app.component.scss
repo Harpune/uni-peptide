@@ -31,3 +31,16 @@
   margin-bottom: 0;
   list-style-type: none;
 }
+
+.mat-stepper-horizontal {
+  background-color: transparent;
+  width: 67%;
+}
+
+ ::ng-deep .mat-horizontal-stepper-header {
+   pointer-events: none !important;
+ }
+
+:host ::ng-deep .mat-horizontal-content-container {
+  padding: 0 !important;
+}

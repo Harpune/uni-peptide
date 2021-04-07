@@ -8,13 +8,22 @@
       <img style="max-width:100%; max-height: 100%; margin-right: 16px; margin-left: 16px; cursor: pointer; "
         [src]="logo" routerLink="/home" alt="image">
 
+      <mat-horizontal-stepper linear #stepper *ngIf="useStepper" [linear]="linear" style="width: 50%; margin: 0 auto;">
+        <mat-step *ngFor="let item of stepItems" [label]="isMobile ? '' : item.label" [completed]="true"></mat-step>
+        <ng-template matStepperIcon="done">
+          <mat-icon></mat-icon>
+        </ng-template>
+        <ng-template matStepperIcon="number" let-index="index">
+          <mat-icon>edit</mat-icon>
+        </ng-template>
+      </mat-horizontal-stepper>
+
     </mat-toolbar-row>
   </mat-toolbar>
 
   <mat-sidenav-container style="height: 100%;">
 
-    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" style="width: 256px;"
-      *ngIf="account">
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" *ngIf="account">
 
       <div style="padding: 16px;">
         <section class="mat-typography" style="cursor: pointer;" routerLink="/user">
@@ -51,9 +60,9 @@
 
       <mat-divider></mat-divider>
 
-      <mat-expansion-panel [class.mat-elevation-z0]="true" *ngIf="currentInstitute">
+      <mat-expansion-panel [class.mat-elevation-z0]="true" *ngIf="institute">
         <mat-expansion-panel-header>
-          <mat-panel-title>{{currentInstitute.name}}</mat-panel-title>
+          <mat-panel-title>{{institute.name}}</mat-panel-title>
         </mat-expansion-panel-header>
 
         <p>Projekte:</p>
@@ -86,7 +95,8 @@
         </mat-tree>
 
         <ng-template #noTree>
-          <button mat-stroked-button style="width: 100%;" color="primary" (click)="openProjectDialog()">Erstes Projekt erstellen</button>
+          <button mat-stroked-button style="width: 100%;" color="primary" (click)="openProjectDialog()">Erstes Projekt
+            erstellen</button>
         </ng-template>
 
       </mat-expansion-panel>

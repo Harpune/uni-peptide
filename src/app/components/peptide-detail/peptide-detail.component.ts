@@ -26,7 +26,6 @@ export class PeptideDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      console.log('paramas', params)
       this.peptideId = params['peptideId']
       this.getData()
     })
