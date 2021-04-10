@@ -24,7 +24,8 @@
     "@angular/router": "^11.0.4",
     "@types/d3": "^6.2.0",
     "appwrite": "^1.2.0",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
+    "chartjs-plugin-datasource": "^0.1.0",
     "d3": "^6.3.1",
     "ng2-charts": "^2.3.0",
     "ngx-avatar": "^4.0.0",
@@ -34,6 +35,7 @@
     "ngx-responsive": "^9.0.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "xlsx": "^0.16.9",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -41,6 +43,7 @@
     "@angular/cli": "^11.2.7",
     "@angular/compiler-cli": "^11.0.4",
     "@angular/localize": "^11.0.4",
+    "@types/chart.js": "^2.9.32",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.19.8",
     "codelyzer": "^6.0.0",

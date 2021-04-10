@@ -1,0 +1,10 @@
+{
+    "/storage/files": {
+        "target": "http://localhost/v1",
+        "secure": true,
+        "pathRewrite": {
+        },
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

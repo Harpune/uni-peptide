@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Institute, PeptideLibrary, Project } from 'src/app/models/institute';
 import { Account } from 'src/app/models/account'
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
+import * as Chart from 'chart.js';
+import { FileService } from 'src/app/services/file/file.service';
 
 @Component({
   selector: 'app-project-detail',
@@ -10,7 +12,7 @@ import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
   styleUrls: ['./project-detail.component.scss']
 })
 export class ProjectDetailComponent implements OnInit {
-
+  @ViewChild('myChart') chartCanvas!: any
   account!: Account
 
   instituteId!: string
@@ -22,6 +24,7 @@ export class ProjectDetailComponent implements OnInit {
   peptideLibrary!: PeptideLibrary
 
   constructor(private appwriteService: AppwriteService,
+    private fileService: FileService,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -40,6 +43,34 @@ export class ProjectDetailComponent implements OnInit {
       this.project = await this.appwriteService.getProject(this.projectId)
       this.peptideLibrary = await this.appwriteService.getPeptideLibrary(this.peptideId)
       this.account = await this.appwriteService.getAccount()
+
+      let result = await this.fileService.getTextFile('6071907e75e16')
+      // console.log('result', result)
+      let X: number[] = []
+      let Y: number[] = []
+      result.split('\n').forEach(line => {
+        let splittedLine = line.split(',')
+        let x: number = +splittedLine[0]
+        let y: number = +splittedLine[1]
+        X.push(x)
+        Y.push(y)
+      })
+
+      var chart = new Chart('myChart', {
+        type: 'line',
+        data: {
+          labels: X,
+          datasets: [
+            {
+              label: 'Wow',
+              data: Y,
+              backgroundColor: '#80bbcb55',
+              borderColor: '#00597a',
+            }
+          ]
+        }
+      });
+
     } catch (e) {
       console.log(e)
     }

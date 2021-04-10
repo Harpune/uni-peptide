@@ -1,12 +1,12 @@
 <div fxLayout="row" fxLayout.lt-md="column">
   <div fxFlexOrder="1" fxFlex="3 2 66%">
-    <mat-card class="main-card" *ngIf="project">
+    <mat-card class="main-card" *ngIf="peptideLibrary">
       <mat-card-header>
-        <mat-card-title>Peptide</mat-card-title>
-        <mat-card-subtitle>Alle Peptide bezüglich {{project.name}}</mat-card-subtitle>
+        <mat-card-title>{{ peptideLibrary.name }}</mat-card-title>
+        <mat-card-subtitle>{{ peptideLibrary.organism }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-
+        <canvas id="myChart"></canvas>
       </mat-card-content>
     </mat-card>
 
@@ -15,12 +15,12 @@
 
     <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}">
       <mat-card-header>
-        <mat-card-title>Favorit</mat-card-title>
-        <mat-card-subtitle>Favorisierte Projekte werden auf der Startseite angezeigt.</mat-card-subtitle>
+        <mat-card-title>Neue Fraction</mat-card-title>
+        <mat-card-subtitle>Lade neue Fraktions hoch</mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions>
         <button mat-stroked-button color="primary" style="width: 100%;">
-          Favorisieren
+          Hochladen
         </button>
       </mat-card-actions>
     </mat-card>
