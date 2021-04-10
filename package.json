@@ -24,7 +24,9 @@
     "@angular/router": "^11.0.4",
     "@types/d3": "^6.2.0",
     "appwrite": "^1.2.0",
+    "chart.js": "^2.9.3",
     "d3": "^6.3.1",
+    "ng2-charts": "^2.3.0",
     "ngx-avatar": "^4.0.0",
     "ngx-device-detector": "^2.0.4",
     "ngx-dropzone": "^2.3.0",
@@ -36,7 +38,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1100.4",
-    "@angular/cli": "^11.0.4",
+    "@angular/cli": "^11.2.7",
     "@angular/compiler-cli": "^11.0.4",
     "@angular/localize": "^11.0.4",
     "@types/jasmine": "~3.6.0",

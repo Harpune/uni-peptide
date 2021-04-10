@@ -6,11 +6,10 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
 import { speedDialFabAnimations } from 'src/app/animations/fab-rotation.animations';
 import { Account } from 'src/app/models/account';
-import { Institute, Project } from 'src/app/models/institute';
+import { Institute, PeptideLibrary, Project } from 'src/app/models/institute';
 import { AppwriteService } from 'src/app/services/appwrite/appwrite.service';
-import { MiniFab } from '../institute-details/institute-details.component';
 import { CreateProjectComponent } from '../project-create/project-create.component';
-import { UploadFilesComponent } from '../files-upload/files-upload.component';
+import { PeptideLibraryAllComponent } from '../peptide-library-all/peptide-library-all.component';
 
 @Component({
   selector: 'app-project',
@@ -26,13 +25,9 @@ export class ProjectComponent implements OnInit {
   project!: Project
   account!: Account
   isOwner: boolean = false
+  peptideLibraries: PeptideLibrary[] = []
 
-  miniFabButtons: MiniFab[] = []
-  fabTogglerState: string = 'inactive';
-  fabButtons: MiniFab[] = [
-    { icon: 'lightbulb_outline', label: 'Sub-Projekt', id: 'subproject' },
-    { icon: 'attach_file', label: 'Hochladen', id: 'upload' },
-    { icon: 'delete', label: 'Löschen', id: 'delete', color: 'warn' }]
+  isFavorite: boolean = false
 
   treeControl = new NestedTreeControl<Project>(node => node.subprojects)
   dataSource = new MatTreeNestedDataSource<Project>()
@@ -46,7 +41,6 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      console.log('paramas', params)
       this.instituteId = params['instituteId']
       this.projectId = params['projectId']
       this.getData()
@@ -65,6 +59,14 @@ export class ProjectComponent implements OnInit {
         .filter(role => role.includes(this.institute.teamId))
         .some(role => role.includes('owner'))
 
+      this.peptideLibraries = []
+      if (this.project.peptideLibraryIds) {
+        for await (const peptideLibrary of this.project.peptideLibraryIds.map(peptideLibraryId =>
+          this.appwriteService.getPeptideLibrary(peptideLibraryId))) this.peptideLibraries.push(peptideLibrary)
+      }
+
+      this.checkIfFavorite()
+
     } catch (e) {
       console.log(e)
     }
@@ -75,32 +77,19 @@ export class ProjectComponent implements OnInit {
     this.router.navigate(['institute/' + this.instituteId + '/project/' + project.$id])
   }
 
-  toggleMiniFabs() {
-    this.miniFabButtons.length ? this.hideMiniFabs() : this.showMiniFabs();
-  }
+  async listAllPeptideLibraries() {
+    const dialogRef = this.dialog.open(PeptideLibraryAllComponent, {
+      data: this.project.peptideLibraryIds
+    })
 
-  showMiniFabs() {
-    this.fabTogglerState = 'active'
-    this.miniFabButtons = this.fabButtons
-  }
+    dialogRef.afterClosed().subscribe((peptideLibrary: PeptideLibrary[]) => {
+      // update ids
+      this.project.peptideLibraryIds = peptideLibrary.map(it => it.$id)
 
-  hideMiniFabs() {
-    this.fabTogglerState = 'inactive'
-    this.miniFabButtons = []
-  }
-
-  miniFabClicked(miniFab: MiniFab) {
-    switch (miniFab.id) {
-      case 'subproject':
-        this.openProjectDialog()
-        break;
-      case 'upload':
-        this.openFilesDialog()
-        break;
-      case 'delete':
-        this.deleteProject();
-        break;
-    }
+      // save
+      this.appwriteService.updateProject(this.project)
+        .then(project => this.getData())
+    })
   }
 
   deleteProject() {
@@ -136,23 +125,53 @@ export class ProjectComponent implements OnInit {
         this.project.subprojects.push(project)
         this.appwriteService.updateProject(this.project)
           .then(() => this.getData())
-          .finally(() => this.hideMiniFabs())
       }
     })
   }
 
-  openFilesDialog() {
-    const dialogRef = this.dialog.open(UploadFilesComponent, {
-      data: {
-        project: this.project,
-        institute: this.institute
-      }
-    })
+  showPeptide(peptideLibrary: PeptideLibrary) {
+    // this.snackBar.open('Show everthing about ' + peptideLibrary.name, 'Ok', { duration: 2000 })
+    this.router.navigate(['./peptide/' + peptideLibrary.$id], { relativeTo: this.route })
+  }
 
-    dialogRef.afterClosed().subscribe(res => {
-      console.log('Res Dialog', res)
-      this.getData()
-      this.hideMiniFabs()
-    })
+  checkIfFavorite() {
+    // project with insitute concatenated
+    let projectKey = this.instituteId + ':' + this.projectId
+
+    let fav_projects: string[] = this.account?.prefs?.fav_projects
+    if (fav_projects) {
+      this.isFavorite = fav_projects.includes(projectKey)
+    } else {
+      this.isFavorite = false
+    }
+  }
+
+  toggleFavorite() {
+    this.isFavorite = !this.isFavorite
+
+    // project with insitute concatenated
+    let projectKey = this.instituteId + ':' + this.projectId
+
+    // exisiting favorites
+    let fav_projects: string[] = this.account.prefs.fav_projects
+
+    // make sure it exists
+    if (!fav_projects) {
+      fav_projects = []
+    }
+
+    // remove or add project id to account preferences
+    if (this.isFavorite) {
+      fav_projects.push(projectKey)
+    } else {
+      const index = fav_projects.indexOf(projectKey, 0);
+      if (index > -1) {
+        fav_projects.splice(index, 1);
+      }
+    }
+
+    // update account preferences
+    this.account.prefs.fav_projects = fav_projects
+    this.appwriteService.updateAccountPrefs(this.account.prefs)
   }
 }

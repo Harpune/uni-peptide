@@ -1,3 +1,8 @@
+.toolbar-color {
+  background: linear-gradient(to top right, #007697 0%, #4e7f27 100%);
+  color: white;
+}
+
 .root-container {
   display: flex;
   flex-direction: column;
@@ -10,4 +15,32 @@
 
 .menu-spacer {
   flex: 1 1 auto;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.project-tree-invisible {
+  display: none;
+}
+
+.project-tree ul,
+.project-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.mat-stepper-horizontal {
+  background-color: transparent;
+  width: 67%;
+}
+
+ ::ng-deep .mat-horizontal-stepper-header {
+   pointer-events: none !important;
+ }
+
+:host ::ng-deep .mat-horizontal-content-container {
+  padding: 0 !important;
 }

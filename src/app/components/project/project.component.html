@@ -1,57 +1,106 @@
-<div style="margin: 32px;" *ngIf="project">
-  <section class="mat-typography">
-    <h1>{{project.name}}</h1>
-    <h4>{{project.description}}</h4>
-  </section>
+<section class="mat-typography" style="margin: 32px;">
+  <h1>{{project ? project.name : 'Projekt'}}</h1>
+  <h4>{{project ? project.description : ''}}</h4>
+</section>
 
-  <mat-card class="mat-elevation-z8 form-card" *ngIf="dataSource.data">
-    <mat-card-header>
-      <mat-card-title>Sub-Projekte</mat-card-title>
-      <mat-card-subtitle>Alle Sub-Projekte von {{project.name}}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
+<div fxLayout="row" fxLayout.lt-md="column">
+  <div fxFlexOrder="1" fxFlex="3 2 66%">
 
-      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="project-tree">
+    <mat-card class="main-card" *ngIf="project">
+      <mat-card-header>
+        <mat-card-title>Peptide</mat-card-title>
+        <mat-card-subtitle>Alle Peptide bezüglich {{project.name}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-action-list>
+          <mat-list-item *ngFor="let peptide of peptideLibraries" (click)="showPeptide(peptide)">
+            <div mat-line>{{peptide.name}}</div>
+            <div mat-line>{{peptide.organism}}</div>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-stroked-button style="width: 100%;" color="primary" (click)="listAllPeptideLibraries()">
+              Peptide hinzufügen
+            </button>
+          </mat-list-item>
+        </mat-action-list>
 
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="showProject(node)" class="clickable">
-          <li class="mat-tree-node">
-            <!-- use a disabled button to provide padding for tree leaf -->
-            <button mat-icon-button disabled></button>
-            {{node.name}}
-          </li>
-        </mat-tree-node>
+      </mat-card-content>
+    </mat-card>
 
-        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-          <li>
-            <div class="mat-tree-node" (click)="showProject(node)" class="clickable">
-              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
-                <mat-icon class="mat-icon-rtl-mirror">
-                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                </mat-icon>
-              </button>
-              {{node.name}}
-            </div>
-            <ul [class.project-tree-invisible]="!treeControl.isExpanded(node)">
-              <ng-container matTreeNodeOutlet></ng-container>
-            </ul>
-          </li>
-        </mat-nested-tree-node>
-      </mat-tree>
-    </mat-card-content>
-  </mat-card>
-</div>
-<div class="fab-container">
-  <button mat-fab color="primary" aria-label="Neues Projekt erstellen" class="fab-toggler" (click)="toggleMiniFabs()">
-    <mat-icon [@fab-toggler]="{value: fabTogglerState}">add</mat-icon>
-    <!-- <span class="extended-fab-button-label">Projekt</span> -->
-  </button>
-  <div [@speed-dial-stagger]="miniFabButtons.length">
-    <button [color]="btn.color" *ngFor="let btn of miniFabButtons" mat-mini-fab class="extended-fab-button" [disabled]="btn.id === 'delete' && !isOwner"
-      color="secondary" (click)="miniFabClicked(btn)">
-      <mat-icon>{{btn.icon}}</mat-icon>
-      <span class="extended-fab-button-label">{{btn.label}}</span>
-    </button>
   </div>
-</div>
-<div id="fab-dismiss" *ngIf="fabTogglerState==='active'" (click)="hideMiniFabs()">
+  <div fxFlexOrder="2" fxFlex="1 1 33%">
+
+    <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}">
+      <mat-card-header>
+        <mat-card-title>Favorit</mat-card-title>
+        <mat-card-subtitle>Favorisierte Projekte werden auf der Startseite angezeigt.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary" style="width: 100%;" (click)="toggleFavorite()">
+          <mat-icon>{{!isFavorite ? "favorite_border" : "favorite"}}</mat-icon>
+          Favorisieren
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}" *ngIf="project">
+      <mat-card-header>
+        <mat-card-title>Projekte</mat-card-title>
+        <mat-card-subtitle>Alle Projekte unter {{project.name}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="project-tree" *ngIf="dataSource.data">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="showProject(node)" class="clickable">
+            <li class="mat-tree-node">
+              {{node.name}}
+            </li>
+          </mat-tree-node>
+
+          <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+            <li>
+              <div class="mat-tree-node" (click)="showProject(node)" class="clickable">
+                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                  <mat-icon class="mat-icon-rtl-mirror">
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                  </mat-icon>
+                </button>
+                {{node.name}}
+              </div>
+              <ul [class.project-tree-invisible]="!treeControl.isExpanded(node)">
+                <ng-container matTreeNodeOutlet></ng-container>
+              </ul>
+            </li>
+          </mat-nested-tree-node>
+        </mat-tree>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary" style="width: 100%;" (click)="openProjectDialog()">Neues
+          Projekt erstellen</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}">
+      <mat-card-header>
+        <mat-card-title>Dokument hochladen</mat-card-title>
+        <mat-card-subtitle>Laden sie ein neues Dokument hoch.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary" style="width: 100%;" (click)="openFilesDialog()">Hochladen</button>
+      </mat-card-actions>
+    </mat-card> -->
+
+    <mat-card class="side-card" [ngClass.lt-md]="{'main-card': true, 'side-card': false}">
+      <mat-card-header>
+        <mat-card-title>Projekt löschen</mat-card-title>
+        <mat-card-subtitle>Löschen Sie das gesamte Projekt, inklusive aller Unterprojekte.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-stroked-button color="warn" style="width: 100%;" (click)="deleteProject()">Löschen</button>
+      </mat-card-actions>
+    </mat-card>
+
+
+  </div>
 </div>

@@ -6,13 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ResponsiveModule } from 'ngx-responsive'
 import { AvatarModule } from 'ngx-avatar';
 import { CdkStepperModule } from '@angular/cdk/stepper';
+import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +33,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatStepperModule } from '@angular/material/stepper';
+import { ChartsModule } from 'ng2-charts';
 
 import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -51,7 +55,11 @@ import { MemberInvitationCallbackComponent } from './components/callback-member-
 import { UploadFilesComponent } from './components/files-upload/files-upload.component';
 import { PeptideLibraryComponent } from './components/peptide-library/peptide-library.component';
 import { CreatePeptideLibraryComponent } from './components/peptide-library-create/peptide-library-create.component';
-import { FilesPreviewComponent } from './components/files-preview/files-preview.component';
+import { FilesPreviewComponent } from './components/files-peptide-preview/files-peptide-preview.component';
+import { PeptideLibraryAllComponent } from './components/peptide-library-all/peptide-library-all.component';
+import { PeptideDetailComponent } from './components/peptide-detail/peptide-detail.component';
+import { SafePipe } from './pipe/safe-pipe/safe-pipe.pipe';
+import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 
 @NgModule({
   declarations: [
@@ -73,13 +81,19 @@ import { FilesPreviewComponent } from './components/files-preview/files-preview.
     UploadFilesComponent,
     PeptideLibraryComponent,
     CreatePeptideLibraryComponent,
-    FilesPreviewComponent
+    FilesPreviewComponent,
+    PeptideLibraryAllComponent,
+    PeptideDetailComponent,
+    SafePipe,
+    ProjectDetailComponent
   ],
   imports: [
     CommonModule,
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
+    ChartsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ResponsiveModule.forRoot(),
@@ -104,7 +118,11 @@ import { FilesPreviewComponent } from './components/files-preview/files-preview.
     MatTreeModule,
     MatExpansionModule,
     MatBadgeModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatStepperModule,
     CdkStepperModule,
+    LayoutModule,
     FlexLayoutModule,
     NgxDropzoneModule
   ],

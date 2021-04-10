@@ -547,6 +547,34 @@ export class AppwriteService {
     })
   }
 
+  updatePeptideLibrary(data: PeptideLibrary): Promise<PeptideLibrary> {
+    return new Promise<PeptideLibrary>(async (resolve, reject) => {
+      try {
+        console.log('Start update peptide-library', data)
+        let res = await this.appwrite.database.updateDocument(environment.peptideLibraryCollectionId, data.$id, data, ['*'], ['*'])
+        console.log('End update peptide-library', res)
+        resolve(res as PeptideLibrary)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
+  getPeptideLibrary(peptideLibraryId: string): Promise<PeptideLibrary> {
+    return new Promise<PeptideLibrary>(async (resolve, reject) => {
+      try {
+        console.log('Start get peptide-library', peptideLibraryId)
+        let res = await this.appwrite.database.getDocument(environment.peptideLibraryCollectionId, peptideLibraryId)
+        console.log('End get peptide-library', res)
+        resolve(res as PeptideLibrary)
+      } catch (e) {
+        this.handleError(e)
+        reject(e)
+      }
+    })
+  }
+
   listPeptideLibraries(): Promise<PeptideLibrary[]> {
     return new Promise<PeptideLibrary[]>(async (resolve, reject) => {
       try {
@@ -566,7 +594,6 @@ export class AppwriteService {
   uploadFile(file: File, permissions: string[] = ["*"]): Promise<AppwriteFile> {
     return new Promise<AppwriteFile>(async (resolve, reject) => {
       try {
-
         console.log('Start upload file', file, permissions)
         let res = await this.appwrite.storage.createFile(file, permissions, permissions)
         console.log('End upload file', res)

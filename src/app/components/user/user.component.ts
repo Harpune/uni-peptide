@@ -51,7 +51,7 @@ export class UserComponent implements OnInit {
     this.verifying = true
     this.appwriteService.createVerification()
       .then(res => this.snackbar.open('Es wurde eine E-Mail an ' + this.account.email + ' versandt', 'Ok', { duration: 2000 }))
-      .catch(err => this.snackbar.open('Es wurde keine E-Mail gesendet.', 'Ok', { duration: 2000 }))
+      .catch(err => this.snackbar.open('Es konnte keine E-Mail gesendet werden.', 'Ok', { duration: 2000 }))
       .finally(() => this.verifying = false)
   }
 
